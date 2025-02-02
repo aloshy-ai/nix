@@ -27,10 +27,6 @@
     gc = {
       automatic = pkgs.lib.mkDefault true;
       options = pkgs.lib.mkDefault "--delete-older-than 1d";
-      interval = {
-        Hour = 3;
-        Minute = 15;
-      };
     };
 
     nrBuildUsers = 32;
