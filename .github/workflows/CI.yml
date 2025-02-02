@@ -15,8 +15,18 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: nixos/nix
+      volumes:
+        - /nix:/nix
       options: --privileged
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: false
+          clean: false
+      - name: Generate NixOS Configuration
+        run: sudo nixos-generate-config
       - name: Test install script
-        run: ./install.sh
+        run: |
+          chmod +x install.sh
+          ./install.sh
