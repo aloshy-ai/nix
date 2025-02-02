@@ -7,7 +7,7 @@ curl -fsSL https://ascii.aloshy.ai | bash
 
 # Install nix (if not already installed)
 if ! command -v nix >/dev/null 2>&1; then
-   curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install
+   curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install --no-confirm
 fi
 
 # Get current system using uname
