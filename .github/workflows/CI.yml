@@ -6,6 +6,14 @@ jobs:
   test-macos:
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Test install script
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up GitHub Token
+        run: echo "GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
+
+      - name: Make install script executable
+        run: chmod +x install.sh
+
+      - name: Run install script
         run: ./install.sh
