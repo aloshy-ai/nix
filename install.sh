@@ -32,5 +32,15 @@ git clone https://github.com/aloshy-ai/nix $DARWIN_REPO_ROOT
 
 echo "INSTALLING NIX-DARWIN"
 cd $DARWIN_REPO_ROOT
-nix run  --extra-experimental-features "nix-command flakes" nix-darwin/master#darwin-rebuild -- switch --flake
 
+# Use authenticated requests if GITHUB_TOKEN is set, otherwise use default
+if [ -n "$GITHUB_TOKEN" ]; then
+  echo "Using authenticated GitHub requests..."
+  nix run --extra-experimental-features "nix-command flakes" \
+    nix-darwin/master#darwin-rebuild --switch --flake \
+    --option access-tokens "github.com=${GITHUB_TOKEN}"
+else
+  echo "Running without GitHub authentication..."
+  nix run --extra-experimental-features "nix-command flakes" \
+    nix-darwin/master#darwin-rebuild --switch --flake
+fi
