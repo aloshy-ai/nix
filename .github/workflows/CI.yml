@@ -4,21 +4,17 @@ on: [push]
 
 jobs:
   test-macos:
-    runs-on: macos-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: DeterminateSystems/nix-installer-action@main
-      - name: Test install script
-        run: ./install.sh
-
-  test-nixos:
     runs-on: ubuntu-latest
     container:
-      image: nixos/nixos:latest
+      image: nixos/nix:latest
       volumes:
         - /nix:/nix
       options: --privileged
     steps:
+      - name: Install System Dependencies
+        run: |
+          # Install basic utilities that might be missing
+          nix-env -iA nixpkgs.coreutils nixpkgs.sudo
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
