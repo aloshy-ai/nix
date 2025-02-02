@@ -8,7 +8,7 @@
   nix = {
     settings = {
       experimental-features = ["nix-command" "flakes"];
-      auto-optimise-store = true;
+      auto-optimise-store = false;
       cores = 0; # Use all cores
       max-jobs = "auto"; # Use all logical cores
       min-free = toString (1024 * 1024 * 1024); # 1 GiB
