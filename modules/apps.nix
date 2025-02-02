@@ -23,6 +23,7 @@
       devbox
       nixfmt
       mkpasswd
+      docker
     ];
 
     variables = {

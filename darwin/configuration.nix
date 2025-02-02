@@ -1,4 +1,4 @@
-{ pkgs, lib, hostname, userConfig, ... }: {
+{ pkgs, hostname, userConfig, ... }: {
   
   imports = [
     ./brew.nix
@@ -11,7 +11,7 @@
   };
 
   system = {
-    stateVersion = lib.trivial.release;
+    stateVersion = 5;
     
     # Reload settings without requiring logout
     activationScripts = {
@@ -139,8 +139,8 @@
     };
 
     gc = {
-      automatic = lib.mkDefault true;
-      options = lib.mkDefault "--delete-older-than 7d";
+      automatic = pkgs.lib.mkDefault true;
+      options = pkgs.lib.mkDefault "--delete-older-than 7d";
       interval = {
         Hour = 3;
         Minute = 15;

@@ -27,23 +27,5 @@
           done
         '')
     ];
-
-    # Enable container service based on platform
-    virtualisation = {
-      docker = lib.mkIf (!pkgs.stdenv.isDarwin) {
-        enable = true;
-        autoPrune = {
-          enable = true;
-          dates = "weekly";
-        };
-      };
-    };
-    services.docker = lib.mkIf pkgs.stdenv.isDarwin {
-      enable = true;
-      autoPrune = {
-        enable = true;
-        dates = "weekly";
-      };
-    };
   };
 }

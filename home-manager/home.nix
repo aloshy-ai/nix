@@ -1,9 +1,9 @@
-{ pkgs, lib, userConfig, ... }: {
+{ pkgs, userConfig, ... }: {
   imports = [ ];
 
   home = {
     packages = with pkgs; [ devbox ];
-    stateVersion = lib.trivial.release;
+    stateVersion = pkgs.lib.trivial.release;
   };
 
   programs = {
@@ -13,7 +13,8 @@
     zsh = {
       enable = true;
       initExtra = ''
-        eval "$(devbox global shellenv)"
+        eval "$(devbox global shellenv --init-hook)"
+        eval "$(direnv hook zsh)"
       '';
     };
     git = {
