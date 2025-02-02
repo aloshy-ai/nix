@@ -4,6 +4,14 @@ on: [push]
 
 jobs:
   test-macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: DeterminateSystems/nix-installer-action@main
+      - name: Test install script
+        run: ./install.sh
+
+  test-nixos:
     runs-on: ubuntu-latest
     container:
       image: nixos/nix:latest
