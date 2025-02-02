@@ -43,4 +43,11 @@
     useGlobalPkgs = true;
     useUserPackages = true;
   };
+
+  # Zsh everywhere!
+  programs = {
+    zsh = {
+      enable = true;
+    };
+  };
 }
