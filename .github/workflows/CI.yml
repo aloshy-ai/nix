@@ -14,7 +14,7 @@ jobs:
   test-nixos:
     runs-on: ubuntu-latest
     container:
-      image: nixos/nix
+      image: nixos/nixos:latest
       volumes:
         - /nix:/nix
       options: --privileged
