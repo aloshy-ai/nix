@@ -32,5 +32,5 @@ git clone https://github.com/aloshy-ai/nix $DARWIN_REPO_ROOT
 
 echo "INSTALLING NIX-DARWIN"
 cd $DARWIN_REPO_ROOT
-nix run  --extra-experimental-features "nix-command flakes" nix-darwin/master#darwin-rebuild -- switch
+nix run  --extra-experimental-features "nix-command flakes" nix-darwin/master#darwin-rebuild -- switch --flake
 
