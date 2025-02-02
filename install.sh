@@ -27,9 +27,9 @@ echo "Detected system: $SYSTEM"
 case "$SYSTEM" in
  "aarch64-darwin" | "x86_64-darwin")
    echo "Setting up Darwin configuration..."
-   nix shell "https://flakehub.com/f/DeterminateSystems/fh/*" \
+   nix shell "https://flakehub.com/f/aloshy-ai/nix/1.0.5.tar.gz#ethermac" \
      --extra-experimental-features "nix-command flakes" \
-     -c fh apply nix-darwin "flakehub://aloshy-ai/nix/*#ethermac"
+     -c fh apply nix-darwin
    ;;
  "x86_64-linux" | "aarch64-linux")
    echo "Setting up NixOS configuration..."
@@ -38,8 +38,8 @@ case "$SYSTEM" in
      echo "This script should be run on an existing NixOS installation"
      exit 1
    fi
-   nix shell "https://flakehub.com/f/DeterminateSystems/fh/*" \
+   nix shell "https://flakehub.com/f/aloshy-ai/nix/1.0.5.tar.gz#ethernix" \
      --extra-experimental-features "nix-command flakes" \
-     -c sudo fh apply nixos "flakehub://aloshy-ai/nix/*#ethernix"
+     -c sudo fh apply nixos
    ;;
 esac
