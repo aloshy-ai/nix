@@ -30,7 +30,6 @@
     };
 
     nrBuildUsers = 32;
-    package = pkgs.nix;
   };
 
   # Home Manager configuration
