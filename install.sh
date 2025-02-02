@@ -10,8 +10,8 @@ if ! command -v nix >/dev/null 2>&1; then
    curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install
 fi
 
-# Get current system using nix-installer's detect-system
-SYSTEM=$(curl -sSf https://install.determinate.systems/current-system)
+# Get current system using nixpkgs
+SYSTEM=$(nix eval --impure --raw --expr 'builtins.currentSystem')
 
 case "$SYSTEM" in
  "aarch64-darwin" | "x86_64-darwin")
