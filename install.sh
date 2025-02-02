@@ -41,6 +41,5 @@ if [ -n "$GITHUB_TOKEN" ]; then
     --option access-tokens "github.com=${GITHUB_TOKEN}"
 else
   echo "Running without GitHub authentication..."
-  nix run --extra-experimental-features "nix-command flakes" \
-    nix-darwin/master#darwin-rebuild --switch --flake
+  nix run nix-darwin -- switch --flake $DARWIN_REPO_ROOT
 fi
