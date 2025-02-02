@@ -121,8 +121,6 @@
   # System configuration
   security.pam.enableSudoTouchIdAuth = true;
   services.nix-daemon.enable = true;
-  nixpkgs.config.allowUnfree = true;
-  programs.zsh.enable = true;
 
   # Networking configuration
   networking = {
