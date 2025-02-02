@@ -11,7 +11,7 @@ if ! command -v nix >/dev/null 2>&1; then
 fi
 
 # Get current system
-SYSTEM=$(nix run --no-write-lock-file "github:nix-systems/default-system/1.0.0" \
+SYSTEM=$(nix run --no-write-lock-file "github:nix-systems/default#default-system" \
   --extra-experimental-features "nix-command flakes")
 
 case "$SYSTEM" in
