@@ -25,9 +25,12 @@ echo "ADDING NIX-DARWIN CHANNEL"
 sudo nix-channel --add https://github.com/LnL7/nix-darwin/archive/master.tar.gz darwin
 sudo nix-channel --update
 
-# echo "INSTALLING NIX-DARWIN"
-# nix run  --extra-experimental-features "nix-command flakes" nix-darwin/master#darwin-rebuild -- switch
+echo "CLONING NIX FLAKES"
+export DARWIN_REPO_ROOT=$HOME/.config/nix-darwin
+rm -rf $DARWIN_REPO_ROOT
+git clone https://github.com/aloshy-ai/nix $DARWIN_REPO_ROOT
 
-echo "APPLYING ETHERMAC CONFIG"
-nix shell --extra-experimental-features "nix-command flakes" -c fh apply nix-darwin "aloshy-ai/nix/1.0.5#darwinConfigurations.ethermac"
-nix shell --extra-experimental-features "nix-command flakes" -c fh apply nix-darwin "aloshy-ai/nix/1.0.5"
+echo "INSTALLING NIX-DARWIN"
+cd $DARWIN_REPO_ROOT
+nix run  --extra-experimental-features "nix-command flakes" nix-darwin/master#darwin-rebuild -- switch
+
