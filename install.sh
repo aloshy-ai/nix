@@ -5,11 +5,6 @@ set -e
 # ASCII art
 curl -fsSL https://ascii.aloshy.ai | bash
 
-# Install nix (if not already installed)
-if ! command -v nix >/dev/null 2>&1; then
-   curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install --no-confirm
-fi
-
 # Get current system using uname
 case "$(uname -s)-$(uname -m)" in
  "Darwin-arm64") SYSTEM="aarch64-darwin" ;;
@@ -20,11 +15,12 @@ case "$(uname -s)-$(uname -m)" in
    ;;
 esac
 
-echo "Detected system: $SYSTEM"
+# Install nix
+curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install --determinate --force --no-confirm
 
 # Setup Darwin configuration
-echo "Setting up Darwin configuration..."
-nix-env -iA nixos.pciutils
+# echo "Setting up Darwin configuration..."
+# nix-env -iA nixos.pciutils
 sudo nix-channel --add https://github.com/LnL7/nix-darwin/archive/master.tar.gz darwin
 sudo nix-channel --update
 nix run  --extra-experimental-features "nix-command flakes" nix-darwin/master#darwin-rebuild -- switch
