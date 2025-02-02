@@ -28,13 +28,16 @@
         '')
     ];
 
-    services.podman = {
-      enable = true;
-      dockerSocket.enable = config.virtualisation.podman.dockerCompat;
-      defaultNetwork.settings.dns_enabled = true;
-      autoPrune = {
+    # NixOS-specific configuration
+    services = lib.mkIf (!pkgs.stdenv.isDarwin) {
+      podman = {
         enable = true;
-        dates = "weekly";
+        dockerSocket.enable = config.virtualisation.podman.dockerCompat;
+        defaultNetwork.settings.dns_enabled = true;
+        autoPrune = {
+          enable = true;
+          dates = "weekly";
+        };
       };
     };
   };
