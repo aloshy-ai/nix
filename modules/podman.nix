@@ -27,5 +27,15 @@
           done
         '')
     ];
+
+    services.podman = {
+      enable = true;
+      dockerSocket.enable = config.virtualisation.podman.dockerCompat;
+      defaultNetwork.settings.dns_enabled = true;
+      autoPrune = {
+        enable = true;
+        dates = "weekly";
+      };
+    };
   };
 }
