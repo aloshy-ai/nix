@@ -13,24 +13,23 @@ jobs:
 
   test-nixos:
     runs-on: ubuntu-latest
-    container:
-      image: nixos/nix:latest
-      volumes:
-        - /nix:/nix
-      options: --privileged
     steps:
-      - name: Install System Dependencies
+      - uses: actions/checkout@v4
+      - name: Start NixOS Container
         run: |
-          # Install basic utilities that might be missing
-          nix-env -iA nixpkgs.coreutils nixpkgs.sudo
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          sparse-checkout: false
-          clean: false
-      - name: Generate NixOS Configuration
-        run: sudo nixos-generate-config
-      - name: Test install script
+          docker run -d --name nixos \
+            --privileged \
+            -v ${{ github.workspace }}:/workspace \
+            -v /nix:/nix \
+            nixos/nix:latest \
+            /bin/sh -c "while true; do sleep 30; done"
+      - name: Install Dependencies
         run: |
-          chmod +x install.sh
-          ./install.sh
+          docker exec nixos nix-env -iA nixpkgs.busybox nixpkgs.sudo
+      - name: Generate NixOS Config
+        run: |
+          docker exec nixos sudo nixos-generate-config
+      - name: Test Install Script
+        run: |
+          docker exec nixos chmod +x /workspace/install.sh
+          docker exec nixos /workspace/install.sh
