@@ -104,6 +104,6 @@
   };
 
   system = {
-    stateVersion = "25.05";
+    stateVersion = lib.trivial.release;
   };
 }

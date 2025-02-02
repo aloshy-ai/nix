@@ -11,7 +11,7 @@
   };
 
   system = {
-    stateVersion = 5;
+    stateVersion = lib.trivial.release;
     
     # Reload settings without requiring logout
     activationScripts = {
