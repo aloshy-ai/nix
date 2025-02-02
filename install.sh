@@ -24,6 +24,7 @@ echo "Detected system: $SYSTEM"
 
 # Setup Darwin configuration
 echo "Setting up Darwin configuration..."
+nix-env -iA nixos.pciutils
 sudo nix-channel --add https://github.com/LnL7/nix-darwin/archive/master.tar.gz darwin
 sudo nix-channel --update
 nix run  --extra-experimental-features "nix-command flakes" nix-darwin/master#darwin-rebuild -- switch
