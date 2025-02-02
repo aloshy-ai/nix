@@ -36,4 +36,11 @@
     nrBuildUsers = 32;
     package = pkgs.nix;
   };
+
+  # Home Manager configuration
+  home-manager = {
+    backupFileExtension = "backup";
+    useGlobalPkgs = true;
+    useUserPackages = true;
+  };
 }
