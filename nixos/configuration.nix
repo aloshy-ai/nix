@@ -1,11 +1,32 @@
-{ pkgs, hostname, ... }:
+{ pkgs, hostname, userConfig, ... }:
 
 {
   # Import hardware configuration
   imports = [
     ./hardware-configuration.nix
-    ../modules/users.nix
+    ../modules/apps.nix
   ];
+
+  users = {
+    users = {
+      ${userConfig.username} = {
+        isNormalUser = true;
+        extraGroups = [ "wheel" ];
+        openssh = {
+          authorizedKeys = {
+            keys = [
+              userConfig.publicKey
+            ];
+          };
+        };
+        hashedPassword = userConfig.hashedPassword;
+      };
+      runner = {
+        isNormalUser = true;
+        extraGroups = [ "wheel" ];
+      };
+    };
+  };
 
   # Cross-compilation settings
   nixpkgs = {
@@ -79,14 +100,6 @@
         "--ssh"
         "--advertise-exit-node"
       ];
-    };
-  };
-
-  environment = {
-    systemPackages = with pkgs; [ ];
-    variables = {
-      SHELL = "zsh";
-      EDITOR = "nano";
     };
   };
 

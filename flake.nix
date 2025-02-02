@@ -1,6 +1,6 @@
 {
  inputs = {
-    nixpkgs.url = "github:nixpkgs/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-parts.url = "github:hercules-ci/flake-parts";
     nix-darwin = {
       url = "github:lnl7/nix-darwin";
@@ -28,33 +28,51 @@
          hashedPassword = "$6$OF89tQYOvaEHKCfx$KYSdQu/GHroUMovkUKUqbvUpEM51MurUpLob6E9YiEMWxvABDsrfACQxej02f9xuV5.HnNtMmpEoLDeAqCZfB1";
        };
 
-       homeManagerConfig = { config, ... }: {
+       homeManagerConfig = { config, pkgs, ... }: {
          home-manager = {
            useGlobalPkgs = true;
            useUserPackages = true;
-           users.${config.userConfig.username} = 
-             import ./home-manager/home.nix { inherit (config) userConfig; };
+           users.${userConfig.username} = import ./home-manager/home.nix {
+             inherit (pkgs) pkgs;
+             inherit userConfig;
+           };
          };
        };
 
-       nixosConfigurations.ethernix = inputs.nixpkgs.lib.nixosSystem {
-         system = "aarch64-linux";
-         specialArgs = { inherit userConfig; };
-         modules = [
-           ./nixos/configuration.nix
-           inputs.home-manager.nixosModules.home-manager
-           homeManagerConfig
-         ];
+       darwinConfigurations = let
+         # Function to create a Darwin system with a given hostname
+         mkDarwinSystem = hostname: inputs.nix-darwin.lib.darwinSystem {
+           system = "aarch64-darwin";
+           specialArgs = { 
+             inherit userConfig hostname;
+           };
+           modules = [
+             ./darwin/configuration.nix
+             inputs.home-manager.darwinModules.home-manager
+             homeManagerConfig
+           ];
+         };
+       in {
+         # The hostname is taken from the attribute name
+         ethermac = mkDarwinSystem "ethermac";
        };
 
-       darwinConfigurations.ethermac = inputs.darwin.lib.darwinSystem {
-         system = "aarch64-darwin";
-         specialArgs = { inherit userConfig; };
-         modules = [
-           ./darwin/configuration.nix
-           inputs.home-manager.darwinModules.home-manager
-           homeManagerConfig
-         ];
+       nixosConfigurations = let
+         # Function to create a NixOS system with a given hostname
+         mkNixosSystem = hostname: inputs.nixpkgs.lib.nixosSystem {
+           system = "aarch64-linux";
+           specialArgs = { 
+             inherit userConfig hostname;
+           };
+           modules = [
+             ./nixos/configuration.nix
+             inputs.home-manager.nixosModules.home-manager
+             homeManagerConfig
+           ];
+         };
+       in {
+         # The hostname is taken from the attribute name
+         ethernix = mkNixosSystem "ethernix";
        };
      };
 

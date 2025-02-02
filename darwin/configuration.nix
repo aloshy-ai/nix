@@ -1,8 +1,14 @@
-{ pkgs, lib, hostname, ... }: {
+{ pkgs, lib, hostname, userConfig, ... }: {
   
   imports = [
-    ../modules/users.nix
+    ./brew.nix
+    ../modules/apps.nix
   ];
+
+  users.users."${userConfig.username}" = {
+    home = "/Users/${userConfig.username}";
+    description = userConfig.fullName;
+  };
 
   system = {
     stateVersion = 5;
@@ -151,23 +157,15 @@
   nixpkgs.config.allowUnfree = true;
   programs.zsh.enable = true;
 
-  # Font configuration
-  fonts.packages = with pkgs; [
-    material-design-icons
-    font-awesome
-    (nerdfonts.override {
-      fonts = [
-        "NerdFontsSymbolsOnly"
-        "FiraCode"
-        "JetBrainsMono"
-        "Iosevka"
-      ];
-    })
-  ];
-
   # Networking configuration
   networking = {
     hostName = hostname;
     computerName = hostname;
+  };
+
+  home-manager = {
+    backupFileExtension = "backup";
+    useGlobalPkgs = true;
+    useUserPackages = true;
   };
 } 
