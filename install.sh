@@ -27,19 +27,15 @@ echo "Detected system: $SYSTEM"
 case "$SYSTEM" in
  "aarch64-darwin" | "x86_64-darwin")
    echo "Setting up Darwin configuration..."
-   nix shell "https://flakehub.com/f/aloshy-ai/nix/1.0.5.tar.gz#ethermac" \
-     --extra-experimental-features "nix-command flakes" \
-     -c fh apply nix-darwin
+   nix shell --extra-experimental-features "nix-command flakes" \
+     -c fh apply nix-darwin "aloshy-ai/nix/1.0.5"
    ;;
  "x86_64-linux" | "aarch64-linux")
    echo "Setting up NixOS configuration..."
    if [ ! -f /etc/nixos/hardware-configuration.nix ]; then
-     echo "Error: hardware-configuration.nix not found!"
-     echo "This script should be run on an existing NixOS installation"
-     exit 1
+     sudo nixos-generate-config
    fi
-   nix shell "https://flakehub.com/f/aloshy-ai/nix/1.0.5.tar.gz#ethernix" \
-     --extra-experimental-features "nix-command flakes" \
-     -c sudo fh apply nixos
+   nix shell --extra-experimental-features "nix-command flakes" \
+     -c sudo fh apply nixos "aloshy-ai/nix/1.0.5"
    ;;
 esac
