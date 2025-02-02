@@ -27,6 +27,7 @@ echo "Detected system: $SYSTEM"
 case "$SYSTEM" in
  "aarch64-darwin" | "x86_64-darwin")
    echo "Setting up Darwin configuration..."
+   nix shell --extra-experimental-features "nix-command flakes" -c fh apply nix-darwin "aloshy-ai/nix/1.0.5#darwinConfigurations.ethermac"
    nix shell --extra-experimental-features "nix-command flakes" \
      -c fh apply nix-darwin "aloshy-ai/nix/1.0.5"
    ;;
@@ -35,7 +36,6 @@ case "$SYSTEM" in
    if [ ! -f /etc/nixos/hardware-configuration.nix ]; then
      sudo nixos-generate-config
    fi
-   nix shell --extra-experimental-features "nix-command flakes" \
-     -c sudo fh apply nixos "aloshy-ai/nix/1.0.5"
+   nix shell --extra-experimental-features "nix-command flakes" -c fh apply nix-darwin "aloshy-ai/nix/1.0.5#darwinConfigurations.ethernix"
    ;;
 esac
