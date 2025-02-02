@@ -2,7 +2,6 @@
   
   imports = [
     ./brew.nix
-    ./podman.nix
     ../modules
   ];
 
