@@ -2,7 +2,7 @@
   
   imports = [
     ./brew.nix
-    ../modules/apps.nix
+    ../modules
   ];
 
   users.users."${userConfig.username}" = {

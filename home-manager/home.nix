@@ -1,9 +1,9 @@
-{ pkgs, userConfig, ... }: {
+{ pkgs, lib, userConfig, ... }: {
   imports = [ ];
 
   home = {
     packages = with pkgs; [ devbox ];
-    stateVersion = pkgs.lib.trivial.release;
+    stateVersion = lib.trivial.release;
   };
 
   programs = {

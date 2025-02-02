@@ -4,7 +4,7 @@
   # Import hardware configuration
   imports = [
     ./hardware-configuration.nix
-    ../modules/apps.nix
+    ../modules
   ];
 
   users = {
@@ -100,16 +100,6 @@
         "--ssh"
         "--advertise-exit-node"
       ];
-    };
-  };
-
-  virtualisation = {
-    docker = {
-      enable = true;
-      autoPrune = {
-        enable = true;
-        dates = "weekly";
-      };
     };
   };
 
