@@ -101,14 +101,14 @@
         "--advertise-exit-node"
       ];
     };
+  };
 
-    virtualisation = {
-      docker = {
+  virtualisation = {
+    docker = {
+      enable = true;
+      autoPrune = {
         enable = true;
-        autoPrune = {
-        enable = true;
-          dates = "weekly";
-        };
+        dates = "weekly";
       };
     };
   };
