@@ -11,10 +11,12 @@ jobs:
       - name: Test install script
         run: ./install.sh
 
-  test-macos:
-    runs-on: macos-latest
+  test-nixos:
+    runs-on: ubuntu-latest
+    container:
+      image: nixos/nix
+      options: --privileged
     steps:
       - uses: actions/checkout@v4
-      - uses: DeterminateSystems/nix-installer-action@main
       - name: Test install script
         run: ./install.sh
