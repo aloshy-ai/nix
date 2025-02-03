@@ -1,5 +1,5 @@
 #!/bin/sh
-# Run `curl -fsSL https://macos.aloshy.ai | bash` to run this script to automatically setup Mac (M Series)
+# Run `curl -fsSL https://darwin.aloshy.ai | bash` to run this script to automatically setup Mac (M Series)
 
 set -e
 REPO_HOST=${GITHUB_SERVER_URL:-https://github.com}
