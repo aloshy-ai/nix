@@ -3,7 +3,6 @@
 
   home = {
     username = userConfig.username;
-    homeDirectory = "/Users/${username}";
     packages = with pkgs; [ devbox ];
     stateVersion = pkgs.lib.trivial.release;
     shellAliases = {
