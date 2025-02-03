@@ -17,6 +17,21 @@
     };
   };
 
+  home = {
+    username = userConfig.username;
+    shellAliases = {
+      # Custom commands
+    };
+    sessionPath = [];
+    sessionVariables = {
+      DIRENV_LOG_FORMAT = "";
+    };
+    activation = {
+      # Remove existing gitconfig to avoid conflicts
+      removeExistingGitconfig = lib.hm.dag.entryBefore ["checkLinkTargets"] ''rm -f ~/.gitconfig'';
+    };
+  };
+
   system = {
     stateVersion = 5;
     
