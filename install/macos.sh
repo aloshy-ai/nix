@@ -4,6 +4,7 @@
 set -e
 REPO_HOST=${GITHUB_SERVER_URL:-https://github.com}
 REPO_PATH=${GITHUB_REPOSITORY:-aloshy-ai/nix}
+HOSTNAME=$(scutil --get LocalHostName)
 curl -fsSL https://ascii.aloshy.ai | bash
 
 echo "ENSURING MAC COMPATIBILITY"
@@ -18,7 +19,8 @@ echo "FETCHING NIX-DARWIN CONFIG ${GITHUB_TOKEN:+USING AUTHENTICATED GITHUB REQU
 export DARWIN_CONFIG_DIR=$HOME/.config/nix-darwin
 rm -rf $DARWIN_CONFIG_DIR
 nix shell ${GITHUB_TOKEN:+--option access-tokens "github.com=${GITHUB_TOKEN}"} nixpkgs#git -c git clone -q ${REPO_HOST}/${REPO_PATH} $DARWIN_CONFIG_DIR
-cd $DARWIN_CONFIG_DIR
+sed -i '' "s/macos/$HOSTNAME/" ${DARWIN_CONFIG_DIR}/flake.nix
 
 echo "INSTALLING NIX-DARWIN ${GITHUB_TOKEN:+USING AUTHENTICATED GITHUB REQUESTS}"
-nix ${GITHUB_TOKEN:+--option access-tokens "github.com=${GITHUB_TOKEN}"} run nix-darwin/master#darwin-rebuild -- switch --flake .#macos
+cd $DARWIN_CONFIG_DIR
+nix ${GITHUB_TOKEN:+--option access-tokens "github.com=${GITHUB_TOKEN}"} run nix-darwin/master#darwin-rebuild -- switch --flake .#${HOSTNAME}
