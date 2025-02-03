@@ -1,4 +1,4 @@
-{ pkgs, lib, userConfig, ... }: {
+{ pkgs, userConfig, ... }: {
   imports = [ ];
 
   home = {
@@ -11,7 +11,7 @@
       DIRENV_LOG_FORMAT = "";
     };
     activation = {
-      removeExistingGitconfig = lib.hm.dag.entryBefore ["checkLinkTargets"] ''rm -f ~/.gitconfig'';
+      removeExistingGitconfig = pkgs.lib.hm.dag.entryBefore ["checkLinkTargets"] ''rm -f ~/.gitconfig'';
     };
   };
 
