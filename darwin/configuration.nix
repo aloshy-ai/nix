@@ -11,6 +11,12 @@
     description = userConfig.fullName;
   };
 
+  nix = {
+    settings = {
+      trusted-users = [ "@admin" userConfig.username ];
+    };
+  };
+
   system = {
     stateVersion = 5;
     
