@@ -9,10 +9,6 @@
       cleanup = "zap"; # Uninstalls all formulae not listed here
     };
 
-    masApps = {
-      copyclip = 595191960;
-    };
-
     taps = [
       "homebrew/services"
     ];
