@@ -26,10 +26,6 @@
     sessionVariables = {
       DIRENV_LOG_FORMAT = "";
     };
-    activation = {
-      # Remove existing gitconfig to avoid conflicts
-      removeExistingGitconfig = pkgs.lib.hm.dag.entryBefore ["checkLinkTargets"] ''rm -f ~/.gitconfig'';
-    };
   };
 
   system = {
