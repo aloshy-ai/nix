@@ -1,5 +1,4 @@
 { pkgs, ... }: {
-  # Homebrew must be installed manually: https://brew.sh
   homebrew = {
     enable = true;
 
