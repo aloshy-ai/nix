@@ -1,9 +1,13 @@
-{ pkgs, userConfig, ... }: {
+{ pkgs, lib, userConfig, ... }: {
   imports = [ ];
 
   home = {
     packages = with pkgs; [ devbox ];
     stateVersion = pkgs.lib.trivial.release;
+    activation = {
+      # Remove existing gitconfig to avoid conflicts
+      removeExistingGitconfig = lib.hm.dag.entryBefore ["checkLinkTargets"] ''rm -f ~/.gitconfig'';
+    };
   };
 
   programs = {
