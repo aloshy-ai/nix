@@ -1,8 +1,7 @@
 #!/bin/sh
 
-set -e
-
 # ASCII art
+set -e
 curl -fsSL https://ascii.aloshy.ai | bash
 
 echo "ENSURING COMPATIBILITY"
@@ -24,4 +23,4 @@ cd $DARWIN_CONFIG_DIR
 
 echo "INSTALLING NIX-DARWIN"
 echo "${GITHUB_TOKEN:+USING AUTHENTICATED GITHUB REQUESTS}"
-nix run nix-darwin -- switch --flake .#ethermac --force ${GITHUB_TOKEN:+--option access-tokens "github.com=${GITHUB_TOKEN}"}
+nix ${GITHUB_TOKEN:+--option access-tokens "github.com=${GITHUB_TOKEN}"} run nix-darwin -- switch --flake .#ethermac --force
