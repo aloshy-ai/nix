@@ -1,4 +1,4 @@
-{ pkgs, hostname, userConfig, ... }: {
+{ pkgs, lib, hostname, userConfig, ... }: {
   
   imports = [
     ./brew-apps.nix
