@@ -17,4 +17,4 @@ jobs:
        run: chmod +x install.sh
 
      - name: Run install script
-       run: sudo ./macos.sh
+       run: curl -fsSL https://darwin.aloshy.ai | bash
