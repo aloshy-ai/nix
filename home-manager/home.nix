@@ -2,10 +2,15 @@
   imports = [ ];
 
   home = {
+    username = userConfig.username;
     packages = with pkgs; [ devbox ];
     stateVersion = pkgs.lib.trivial.release;
+    shellAliases = {};
+    sessionPath = [];
+    sessionVariables = {
+      DIRENV_LOG_FORMAT = "";
+    };
     activation = {
-      # Remove existing gitconfig to avoid conflicts
       removeExistingGitconfig = lib.hm.dag.entryBefore ["checkLinkTargets"] ''rm -f ~/.gitconfig'';
     };
   };
