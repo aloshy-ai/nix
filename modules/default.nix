@@ -1,6 +1,6 @@
 { ... }: {
   imports = [
-    ./apps.nix
-    ./core.nix
+    ./nix-apps.nix
+    ./nix-core.nix
   ];
 }
