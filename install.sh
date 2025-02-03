@@ -9,7 +9,9 @@ DETECTED="$(uname -s)-$(uname -m)"
 [ "$(echo $DETECTED | tr '[:upper:]' '[:lower:]')" = "darwin-arm64" ] || { echo "INCOMPATIBLE SYSTEM DETECTED: $DETECTED" && exit 1; }
 
 echo "INSTALLING NIX"
-curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install --determinate --force --no-confirm
+# curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install --determinate --force --no-confirm
+curl -H "Cache-Control: no-cache" -L https://nixos.org/nix/install | sh -s -- --darwin-use-unencrypted-nix-store-volume --daemon
+
 
 echo "SOURCING NIX"
 . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
