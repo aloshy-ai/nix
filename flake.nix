@@ -19,7 +19,12 @@
        "aarch64-darwin"
      ];
 
-     flake = rec {
+     flake = let
+       hostnames = {
+         darwin = "ethermac";
+         nixos = "ethernix";
+       };
+     in rec {
        userConfig = {
          username = "aloshy";
          email = "noreply@aloshy.ai";
@@ -38,7 +43,6 @@
        };
 
        darwinConfigurations = let
-         # Function to create a Darwin system with a given hostname
          mkDarwinSystem = hostname: inputs.nix-darwin.lib.darwinSystem {
            system = "aarch64-darwin";
            specialArgs = { 
@@ -51,12 +55,10 @@
            ];
          };
        in {
-         # The hostname is taken from the attribute name
-         ethermac = mkDarwinSystem "ethermac";
+         ${hostnames.darwin} = mkDarwinSystem hostnames.darwin;
        };
 
        nixosConfigurations = let
-         # Function to create a NixOS system with a given hostname
          mkNixosSystem = hostname: inputs.nixpkgs.lib.nixosSystem {
            system = "aarch64-linux";
            specialArgs = { 
@@ -69,8 +71,7 @@
            ];
          };
        in {
-         # The hostname is taken from the attribute name
-         ethernix = mkNixosSystem "ethernix";
+         ${hostnames.nixos} = mkNixosSystem hostnames.nixos;
        };
      };
 
