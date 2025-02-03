@@ -22,7 +22,7 @@ sudo nix-channel --update
 echo "CLONING NIX FLAKES"
 export DARWIN_CONFIG_DIR=$HOME/.config/nix-darwin
 rm -rf $DARWIN_CONFIG_DIR
-nix shell nixpkgs#git -c git clone -q https://github.com/aloshy-ai/nix $DARWIN_CONFIG_DIR
+nix shell nixpkgs#git ${GITHUB_TOKEN:+--option access-tokens "github.com=${GITHUB_TOKEN}"} -c git clone -q https://github.com/aloshy-ai/nix $DARWIN_CONFIG_DIR
 cd $DARWIN_CONFIG_DIR
 
 echo "INSTALLING NIX-DARWIN"
