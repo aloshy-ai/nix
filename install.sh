@@ -15,11 +15,8 @@ curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix 
 echo "SOURCING NIX"
 . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
 
-echo "ADDING NIX-DARWIN CHANNEL"
-sudo nix-channel --add https://github.com/LnL7/nix-darwin/archive/master.tar.gz darwin
-sudo nix-channel --update
-
 echo "CLONING NIX FLAKES"
+echo "${GITHUB_TOKEN:+USING AUTHENTICATED GITHUB REQUESTS}"
 export DARWIN_CONFIG_DIR=$HOME/.config/nix-darwin
 rm -rf $DARWIN_CONFIG_DIR
 nix shell nixpkgs#git ${GITHUB_TOKEN:+--option access-tokens "github.com=${GITHUB_TOKEN}"} -c git clone -q https://github.com/aloshy-ai/nix $DARWIN_CONFIG_DIR
