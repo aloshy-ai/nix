@@ -5,8 +5,9 @@ set -e
 # ASCII art
 curl -fsSL https://ascii.aloshy.ai | bash
 
-echo "ASSESSING SUPPORT"
-[ "$(uname -s)-$(uname -m)" = "$(echo 'Darwin-arm64' | tr '[:upper:]' '[:lower:]')" ] || { echo "THIS SCRIPT ONLY SUPPORTS APPLE SILICON MACS (DETECTED: $(uname -s)-$(uname -m))" && exit 1; }
+echo "ENSURING COMPATIBILITY"
+DETECTED="$(uname -s)-$(uname -m)"
+[ "$(echo $DETECTED | tr '[:upper:]' '[:lower:]')" = "darwin-arm64" ] || { echo "INCOMPATIBLE SYSTEM DETECTED: $DETECTED" && exit 1; }
 
 echo "INSTALLING NIX"
 curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install --determinate --force --no-confirm
