@@ -22,8 +22,8 @@ nix shell ${GITHUB_TOKEN:+--option access-tokens "github.com=${GITHUB_TOKEN}"} n
 cd $DARWIN_CONFIG_DIR
 
 echo "DELETE NIX-ENV PACKAGES"
-sudo -i nix-env --uninstall nix
-sudo -i nix-env --uninstall nss-cacert
+sudo -i nix env --uninstall nix
+sudo -i nix env --uninstall nss-cacert
 
 echo "INSTALLING NIX-DARWIN"
 echo "${GITHUB_TOKEN:+USING AUTHENTICATED GITHUB REQUESTS}"
