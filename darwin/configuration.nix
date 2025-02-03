@@ -1,4 +1,4 @@
-{ pkgs, lib, hostname, userConfig, ... }: {
+{ pkgs, hostname, userConfig, ... }: {
   
   imports = [
     ./brew-apps.nix
@@ -28,7 +28,7 @@
     };
     activation = {
       # Remove existing gitconfig to avoid conflicts
-      removeExistingGitconfig = lib.hm.dag.entryBefore ["checkLinkTargets"] ''rm -f ~/.gitconfig'';
+      removeExistingGitconfig = pkgs.lib.hm.dag.entryBefore ["checkLinkTargets"] ''rm -f ~/.gitconfig'';
     };
   };
 
