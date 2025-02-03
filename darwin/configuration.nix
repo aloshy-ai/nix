@@ -17,17 +17,6 @@
     };
   };
 
-  home = {
-    username = userConfig.username;
-    shellAliases = {
-      # Custom commands
-    };
-    sessionPath = [];
-    sessionVariables = {
-      DIRENV_LOG_FORMAT = "";
-    };
-  };
-
   system = {
     stateVersion = 5;
     
