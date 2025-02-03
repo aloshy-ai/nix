@@ -3,17 +3,18 @@ name: Test Install
 on: [push]
 
 jobs:
-  test-macos:
-    runs-on: macos-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+ test-macos:
+   runs-on: macos-latest
+   timeout-minutes: 30
+   steps:
+     - name: Checkout repository
+       uses: actions/checkout@v4
 
-      - name: Set up GitHub Token
-        run: echo "GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
+     - name: Set up GitHub Token
+       run: echo "GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
 
-      - name: Make install script executable
-        run: chmod +x install.sh
+     - name: Make install script executable
+       run: chmod +x install.sh
 
-      - name: Run install script
-        run: ./install.sh
+     - name: Run install script
+       run: sudo ./macos.sh
