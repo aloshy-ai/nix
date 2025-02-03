@@ -21,6 +21,10 @@ rm -rf $DARWIN_CONFIG_DIR
 nix shell ${GITHUB_TOKEN:+--option access-tokens "github.com=${GITHUB_TOKEN}"} nixpkgs#git -c git clone -q https://github.com/aloshy-ai/nix $DARWIN_CONFIG_DIR
 cd $DARWIN_CONFIG_DIR
 
+echo "DELETE NIX-ENV PACKAGES"
+sudo -i nix-env --uninstall nix
+sudo -i nix-env --uninstall nss-cacert
+
 echo "INSTALLING NIX-DARWIN"
 echo "${GITHUB_TOKEN:+USING AUTHENTICATED GITHUB REQUESTS}"
 nix ${GITHUB_TOKEN:+--option access-tokens "github.com=${GITHUB_TOKEN}"} run nix-darwin -- switch --flake .#ethermac --force
