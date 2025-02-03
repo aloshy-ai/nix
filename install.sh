@@ -24,4 +24,4 @@ cd $DARWIN_CONFIG_DIR
 
 echo "INSTALLING NIX-DARWIN"
 echo "${GITHUB_TOKEN:+USING AUTHENTICATED GITHUB REQUESTS}"
-nix ${GITHUB_TOKEN:+--option access-tokens "github.com=${GITHUB_TOKEN}"} run nix-darwin -- switch --flake .#ethermac --force
+nix ${GITHUB_TOKEN:+--option access-tokens "github.com=${GITHUB_TOKEN}"} run nix-darwin -- switch --flake .#ethermac
