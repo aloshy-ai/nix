@@ -52,17 +52,7 @@
              ./darwin/configuration.nix
              inputs.home-manager.darwinModules.home-manager
              inputs.home-manager.darwinModules.home-manager
-             {
-               home-manager = {
-                 useGlobalPkgs = true;
-                 useUserPackages = true;
-                 extraSpecialArgs = { 
-                   inherit userConfig hostname;
-                 };
-                 users.${userConfig.username} = import ./home-manager/home.nix;
-                 backupFileExtension = "backup";
-               };
-             }
+             homeManagerConfig
            ];
          };
        in {
