@@ -44,7 +44,10 @@
          home-manager = {
            useGlobalPkgs = true;
            useUserPackages = true;
-           backupFileExtension = "hm-backup";
+           backupFileExtension = "backup";
+           sharedModules = [
+              mac-app-util.homeManagerModules.default
+           ];
            users.${userConfig.username} = import ./home-manager/home.nix {
              inherit (pkgs) pkgs;
              inherit userConfig;
@@ -60,6 +63,7 @@
            };
            modules = [
              ./darwin/configuration.nix
+             mac-app-util.darwinModules.default
              home-manager.darwinModules.home-manager
              homeManagerConfig
            ];
