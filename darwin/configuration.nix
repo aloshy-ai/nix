@@ -11,14 +11,8 @@
       "${userConfig.username}" = {
         name = userConfig.username;
         home = "/Users/${userConfig.username}";
-      };
-    };
-  };
-
-  home-manager = {
-    users = {
-      "${userConfig.username}" = { pkgs, ... }: {
-        home.stateVersion = pkgs.lib.trivial.release;
+        createHome = true;
+        shell = pkgs.zsh;
       };
     };
   };
