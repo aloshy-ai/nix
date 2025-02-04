@@ -34,6 +34,9 @@
        };
 
        homeManagerConfig = { config, pkgs, ... }: {
+         useGlobalPkgs = true;
+         useUserPackages = true;
+         backupFileExtension = "backup";
          home-manager = {
            users.${userConfig.username} = import ./home-manager/home.nix {
              inherit (pkgs) pkgs;
