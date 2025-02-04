@@ -5,7 +5,6 @@
     "docker@latest"
   ],
   "env": {
-    "DOCKER_HOST": "unix://${HOME}/.colima/default/docker.sock"
   },
   "shell": {
     "init_hook": [],
