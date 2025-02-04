@@ -19,7 +19,7 @@
    };
  };
 
- outputs = inputs@{ flake-parts, ... }:
+ outputs = inputs@{ flake-parts, nixpkgs, home-manager, nix-darwin, mac-app-util, ... }:
    flake-parts.lib.mkFlake { inherit inputs; } {
      systems = [
        "x86_64-linux"
@@ -53,14 +53,14 @@
        };
 
        darwinConfigurations = let
-         mkDarwinSystem = hostname: inputs.nix-darwin.lib.darwinSystem {
+         mkDarwinSystem = hostname: nix-darwin.lib.darwinSystem {
            system = "aarch64-darwin";
            specialArgs = { 
              inherit userConfig hostname;
            };
            modules = [
              ./darwin/configuration.nix
-             inputs.home-manager.darwinModules.home-manager
+             home-manager.darwinModules.home-manager
              homeManagerConfig
            ];
          };
@@ -69,14 +69,14 @@
        };
 
        nixosConfigurations = let
-         mkNixosSystem = hostname: inputs.nixpkgs.lib.nixosSystem {
+         mkNixosSystem = hostname: nixpkgs.lib.nixosSystem {
            system = "aarch64-linux";
            specialArgs = { 
              inherit userConfig hostname;
            };
            modules = [
              ./nixos/configuration.nix
-             inputs.home-manager.nixosModules.home-manager
+             home-manager.nixosModules.home-manager
              homeManagerConfig
            ];
          };
