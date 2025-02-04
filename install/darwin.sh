@@ -27,7 +27,7 @@ export FULLNAME=$(grep 'fullName = "' ${DARWIN_CONFIG_DIR}/flake.nix | sed 's/.*
 
 echo "RENAMING CURRENT USER TO: ${USERNAME}"
 sudo dscl . -change /Users/$USER RecordName $USER $USERNAME
-echo "CURRENT USERNAME: ${whoami}"
+echo "CURRENT USERNAME: $(whoami)"
 
 echo "INSTALLING NIX-DARWIN ${GITHUB_TOKEN:+USING AUTHENTICATED GITHUB REQUESTS}"
 cd $DARWIN_CONFIG_DIR
