@@ -19,6 +19,7 @@
     casks = [
       "cursor"
       "docker"
+      "opera"
     ];
   };
 

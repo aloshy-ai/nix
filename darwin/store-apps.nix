@@ -1,7 +1,7 @@
 { lib, ci-detector, ... }: {
   homebrew = {
     masApps = lib.mkIf (!(ci-detector.lib.inCI)) {
-      copyclip = 595191960;
+      # copyclip = 595191960;
     };
   };
 }
