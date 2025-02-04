@@ -34,7 +34,6 @@
       enable = true;
       initExtra = ''
         eval "$(devbox global shellenv --preserve-path-stack -r)" && hash -r
-        export DOCKER_HOST=unix://$HOME/.colima/run/docker.sock
       '';
     };
     git = {

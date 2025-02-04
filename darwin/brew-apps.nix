@@ -18,6 +18,7 @@
 
     casks = [
       "cursor"
+      "docker"
     ];
   };
 
