@@ -16,6 +16,7 @@ DETECTED="$(uname -s)-$(uname -m)"
 
 echo "CLEANING UP PREVIOUS NIX INSTALLATION"
 sudo /nix/nix-installer uninstall -- --force 2>/dev/null || true
+sudo rm -rf ${HOME}/.config/nix-darwin.backup
 
 echo "INSTALLING NIX"
 if ! curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install --force --no-confirm; then
