@@ -11,7 +11,7 @@ DETECTED="$(uname -s)-$(uname -m)"
 [ "$(echo $DETECTED | tr '[:upper:]' '[:lower:]')" = "darwin-arm64" ] || { echo "INCOMPATIBLE SYSTEM DETECTED: $DETECTED" && exit 1; }
 
 echo "INSTALLING DETERMINATE NIX"
-/nix/nix-installer uninstall || true
+sudo /nix/nix-installer uninstall -- --force || true
 curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install --force --no-confirm
 . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
 
