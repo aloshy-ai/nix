@@ -31,11 +31,4 @@
 
     nrBuildUsers = 32;
   };
-
-  # Zsh everywhere!
-  programs = {
-    zsh = {
-      enable = true;
-    };
-  };
 }
