@@ -24,22 +24,13 @@ echo "FETCHING USER FROM FLAKE"
 export USERNAME=$(grep 'username = "' ${DARWIN_CONFIG_DIR}/flake.nix | sed 's/.*username = "\([^"]*\)".*/\1/')
 export FULLNAME=$(grep 'fullName = "' ${DARWIN_CONFIG_DIR}/flake.nix | sed 's/.*fullName = "\([^"]*\)".*/\1/')
 
+echo "RENAMING CURRENT USER TO: ${USERNAME}"
+sudo dscl . -change /Users/$USER RecordName $USER $USERNAME
+
 echo "HANDLING OLD INSTALLATION"
 [ ! -f /etc/nix/nix.conf ] && sudo mv /etc/nix/nix.conf /etc/nix/nix.conf.before-nix-darwin
 [ ! -f /etc/bashrc.before-nix-darwin ] && sudo mv /etc/bashrc /etc/bashrc.before-nix-darwin
 [ ! -f /etc/zshrc.before-nix-darwin ] && sudo mv /etc/zshrc /etc/zshrc.before-nix-darwin
-
-echo "SETTING UP USER: ${username}"
-if ! dscl . -read /Users/$USERNAME &>/dev/null; then
-    echo "CREATING USER: $USERNAME..."
-    sudo dscl . -create /Users/$USERNAME
-fi
-if ! dscl . -read /Users/$USERNAME UserShell &>/dev/null; then
-    sudo dscl . -create /Users/$USERNAME UserShell /bin/zsh
-fi
-if ! dscl . -read /Users/$USERNAME RealName &>/dev/null; then
-    sudo dscl . -create /Users/$USERNAME RealName "$FULLNAME"
-fi
 
 echo "INSTALLING NIX-DARWIN ${GITHUB_TOKEN:+USING AUTHENTICATED GITHUB REQUESTS}"
 cd $DARWIN_CONFIG_DIR
