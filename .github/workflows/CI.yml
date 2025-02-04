@@ -3,7 +3,7 @@ name: Test Install
 on: [push]
 
 jobs:
- test-macos:
+ test-darwin:
    runs-on: macos-latest
    timeout-minutes: 15
    steps:
