@@ -17,10 +17,7 @@ DETECTED="$(uname -s)-$(uname -m)"
 echo "CLEANING UP PREVIOUS NIX INSTALLATION"
 sudo /nix/nix-installer uninstall -- --force 2>/dev/null || true
 
-echo "INSTALLING NIX PACKAGE MANAGER"
-[ ! -f /etc/bashrc.before-nix-darwin ] && sudo mv /etc/bashrc /etc/bashrc.before-nix-darwin
-[ ! -f /etc/zshrc.before-nix-darwin ] && sudo mv /etc/zshrc /etc/zshrc.before-nix-darwin
-
+echo "INSTALLING NIX"
 if ! curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install --force --no-confirm; then
     echo "ERROR: NIX INSTALLATION FAILED. CHECK YOUR INTERNET CONNECTION AND TRY AGAIN" && exit 1
 fi
@@ -44,6 +41,10 @@ if ! sed -i '' "s/${FLAKE_HOSTNAME}/${CURRENT_HOSTNAME}/" ${DARWIN_CONFIG_DIR}/f
    ! sed -i '' "s/${FLAKE_USERNAME}/${CURRENT_USERNAME}/" ${DARWIN_CONFIG_DIR}/flake.nix; then
     echo "ERROR: FAILED TO UPDATE SYSTEM CONFIGURATION. CHECK FILE PERMISSIONS" && exit 1
 fi
+
+echo "BACKING UP SHELL PROFILES"
+[ ! -f /etc/bashrc.before-nix-darwin ] && sudo mv /etc/bashrc /etc/bashrc.before-nix-darwin
+[ ! -f /etc/zshrc.before-nix-darwin ] && sudo mv /etc/zshrc /etc/zshrc.before-nix-darwin
 
 echo "BUILDING AND ACTIVATING SYSTEM CONFIGURATION"
 cd ${DARWIN_CONFIG_DIR}
