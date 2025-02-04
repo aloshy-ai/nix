@@ -4,7 +4,6 @@
   home = {
     packages = with pkgs; [
       devbox
-      iterm2
       nerd-fonts.fira-code
       nerd-fonts.symbols-only
     ];

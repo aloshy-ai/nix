@@ -1,3 +1,9 @@
 .devbox
 .env*
 .DS_Store
+out
+actions-runner
+DS_Store
+*.img
+*.img.zst
+*.sd

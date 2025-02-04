@@ -10,8 +10,16 @@
   "shell": {
     "init_hook": [],
     "scripts": {
-      "rebuild": [
+      "darwin-install": [
+        "curl -fsSL https://darwin.aloshy.ai | bash"
+      ],
+      "darwin-rebuild": [
         "darwin-rebuild switch --flake ${HOME}/.config/nix-darwin"
+      ],
+      "nixos-build": [
+        "docker build -t ethernix-builder:latest .",
+        "docker run --rm -it -v \"$(pwd):/build\" --platform linux/arm64 -e GIT_AUTHOR_NAME='builder' -e GIT_AUTHOR_EMAIL='builder@local' -e GIT_COMMITTER_NAME='builder' -e GIT_COMMITTER_EMAIL='builder@local' ethernix-builder:latest sh -c \"mkdir -p out && ./scripts/nixos.sh && find /nix/store -name 'nixos-image-sd-card-*.img.zst' -exec unzstd -d {} -o out/ethernix.img \\; && chown -R $(id -u):$(id -g) out\"",
+        "echo 'Image built successfully. You can find `ethernix.img` in the `out/` directory.'"
       ]
     }
   }

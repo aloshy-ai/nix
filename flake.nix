@@ -48,13 +48,13 @@
          hashedPassword = "$6$OF89tQYOvaEHKCfx$KYSdQu/GHroUMovkUKUqbvUpEM51MurUpLob6E9YiEMWxvABDsrfACQxej02f9xuV5.HnNtMmpEoLDeAqCZfB1";
        };
 
-       homeManagerConfig = { config, pkgs, ... }: {
+       homeManagerConfig = { config, pkgs, lib, system, ... }: {
          home-manager = {
            useGlobalPkgs = true;
            useUserPackages = true;
            backupFileExtension = "backup";
-           sharedModules = [
-              mac-app-util.homeManagerModules.default
+           sharedModules = lib.optionals (pkgs.stdenv.isDarwin) [
+             mac-app-util.homeManagerModules.default
            ];
            users.${userConfig.username} = { lib, ... }: import ./home-manager/home.nix {
              inherit pkgs userConfig config lib;
