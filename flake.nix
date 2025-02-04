@@ -48,9 +48,8 @@
            sharedModules = [
               mac-app-util.homeManagerModules.default
            ];
-           users.${userConfig.username} = import ./home-manager/home.nix {
-             inherit (pkgs) pkgs;
-             inherit userConfig;
+           users.${userConfig.username} = { lib, ... }: import ./home-manager/home.nix {
+             inherit pkgs userConfig config lib;
            };
          };
        };

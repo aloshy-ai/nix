@@ -1,4 +1,4 @@
-{ pkgs, userConfig, lib, config, ... }: {
+{ config, lib, pkgs, userConfig, ... }: {
   imports = [];
 
   home = {
@@ -10,12 +10,13 @@
     sessionPath = [];
     activation = {
       linkDevboxConfig = lib.hm.dag.entryAfter ["writeBoundary"] ''
-        DEVBOX_GLOBAL_DIR="$(${pkgs.devbox}/bin/devbox global path)"
+        DEVBOX_GLOBAL_DIR="$(${pkgs.devbox}/bin/devbox -q global path)"
         $DRY_RUN_CMD mkdir -p "$DEVBOX_GLOBAL_DIR"
         [ -f "$DEVBOX_GLOBAL_DIR/devbox.json" ] && $DRY_RUN_CMD rm "$DEVBOX_GLOBAL_DIR/devbox.json"
         $DRY_RUN_CMD ln -sf $VERBOSE_ARG \
-          "${config.home.homeDirectory}/.config/nix-darwin/devbox.json" \
+          "${config.home-manager.users.${userConfig.username}.home.homeDirectory}/.config/nix-darwin/devbox.json" \
           "$DEVBOX_GLOBAL_DIR/devbox.json"
+        ${pkgs.devbox}/bin/devbox -q global install
       '';
     };
     sessionVariables = {
