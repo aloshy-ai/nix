@@ -9,6 +9,10 @@
       url = "github:hraban/mac-app-util";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    ci-detector = {
+      url = "github:loophp/ci-detector";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     nix-darwin = {
       url = "github:lnl7/nix-darwin";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -19,7 +23,7 @@
    };
  };
 
- outputs = inputs@{ flake-parts, nixpkgs, home-manager, nix-darwin, mac-app-util, ... }:
+ outputs = inputs@{ flake-parts, nixpkgs, home-manager, nix-darwin, mac-app-util, ci-detector, ... }:
    flake-parts.lib.mkFlake { inherit inputs; } {
      systems = [
        "x86_64-linux"
@@ -58,7 +62,7 @@
          mkDarwinSystem = hostname: nix-darwin.lib.darwinSystem {
            system = "aarch64-darwin";
            specialArgs = { 
-             inherit userConfig hostname;
+             inherit userConfig hostname ci-detector;
            };
            modules = [
              ./darwin/configuration.nix
