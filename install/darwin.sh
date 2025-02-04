@@ -30,6 +30,5 @@ sudo dscl . -change /Users/$USER RecordName $USER $USERNAME
 
 echo "INSTALLING NIX-DARWIN ${GITHUB_TOKEN:+USING AUTHENTICATED GITHUB REQUESTS}"
 cd $DARWIN_CONFIG_DIR
-sudo -u $CURRENT_USER nix ${GITHUB_TOKEN:+--option access-tokens "github.com=${GITHUB_TOKEN}"} run nix-darwin/master#darwin-rebuild -- switch --flake .#${HOSTNAME}
 nix ${GITHUB_TOKEN:+--option access-tokens "github.com=${GITHUB_TOKEN}"} run nix-darwin/master#darwin-rebuild -- switch --flake .#${HOSTNAME}
 echo "INSTALLATION SUCCESSFUL"
