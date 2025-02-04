@@ -5,6 +5,8 @@
     packages = with pkgs; [
       devbox
       iterm2
+      nerd-fonts.fira-code
+      nerd-fonts.symbols-only
     ];
     stateVersion = pkgs.lib.trivial.release;
     shellAliases = {};
@@ -46,6 +48,10 @@
       enable = true;
     };
     direnv = {
+      enable = true;
+      enableZshIntegration = true;
+    };
+    starship = {
       enable = true;
       enableZshIntegration = true;
     };
