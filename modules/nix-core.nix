@@ -32,13 +32,6 @@
     nrBuildUsers = 32;
   };
 
-  # Home Manager configuration
-  home-manager = {
-    backupFileExtension = "backup";
-    useGlobalPkgs = true;
-    useUserPackages = true;
-  };
-
   # Zsh everywhere!
   programs = {
     zsh = {
