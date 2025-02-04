@@ -1,6 +1,6 @@
-{ lib, ... }: {
+{ lib, ci-detector, ... }: {
   homebrew = {
-    masApps = lib.mkIf (builtins.getEnv "GITHUB_ACTIONS" != "true") {
+    masApps = lib.mkIf (!(ci-detector.lib.inCI)) {
       copyclip = 595191960;
     };
   };
