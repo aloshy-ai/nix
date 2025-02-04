@@ -29,6 +29,10 @@
       options = pkgs.lib.mkDefault "--delete-older-than 1d";
     };
 
+    extraOptions = ''
+      accept-flake-config = true
+    '';
+
     nrBuildUsers = 32;
   };
 }

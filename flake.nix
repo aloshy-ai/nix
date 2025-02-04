@@ -23,6 +23,10 @@
    };
  };
 
+  nixConfig = {
+    allow-impure-eval = true;
+  };
+
  outputs = inputs@{ flake-parts, nixpkgs, home-manager, nix-darwin, mac-app-util, ci-detector, ... }:
    flake-parts.lib.mkFlake { inherit inputs; } {
      systems = [
