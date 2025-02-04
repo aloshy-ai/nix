@@ -4,6 +4,7 @@
 set -e
 REPO_HOST=${GITHUB_SERVER_URL:-https://github.com}
 REPO_PATH=${GITHUB_REPOSITORY:-aloshy-ai/nix}
+CURRENT_USER=$USER
 curl -fsSL https://ascii.aloshy.ai | bash
 
 echo "ENSURING MAC COMPATIBILITY"
@@ -28,11 +29,8 @@ export FULLNAME=$(grep 'fullName = "' ${DARWIN_CONFIG_DIR}/flake.nix | sed 's/.*
 echo "RENAMING CURRENT USER TO: ${USERNAME}"
 sudo dscl . -change /Users/$USER RecordName $USER $USERNAME
 
-echo "HANDLING OLD INSTALLATION"
-[ ! -f /etc/bashrc.before-nix-darwin ] && sudo mv /etc/bashrc /etc/bashrc.before-nix-darwin
-[ ! -f /etc/zshrc.before-nix-darwin ] && sudo mv /etc/zshrc /etc/zshrc.before-nix-darwin
-
 echo "INSTALLING NIX-DARWIN ${GITHUB_TOKEN:+USING AUTHENTICATED GITHUB REQUESTS}"
 cd $DARWIN_CONFIG_DIR
+sudo -u $CURRENT_USER nix ${GITHUB_TOKEN:+--option access-tokens "github.com=${GITHUB_TOKEN}"} run nix-darwin/master#darwin-rebuild -- switch --flake .#${HOSTNAME}
 nix ${GITHUB_TOKEN:+--option access-tokens "github.com=${GITHUB_TOKEN}"} run nix-darwin/master#darwin-rebuild -- switch --flake .#${HOSTNAME}
 echo "INSTALLATION SUCCESSFUL"
