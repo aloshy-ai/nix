@@ -51,7 +51,6 @@
            modules = [
              ./darwin/configuration.nix
              inputs.home-manager.darwinModules.home-manager
-             inputs.home-manager.darwinModules.home-manager
              homeManagerConfig
            ];
          };
