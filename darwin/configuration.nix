@@ -7,8 +7,11 @@
   ];
 
   users.users."${userConfig.username}" = {
+    name = userConfig.username;
     home = "/Users/${userConfig.username}";
     description = userConfig.fullName;
+    gid = 20;
+    uid = 501;
   };
 
   nix = {
