@@ -1,0 +1,149 @@
+{
+  "lockfile_version": "1",
+  "packages": {
+    "act@latest": {
+      "last_modified": "2025-01-19T08:16:51Z",
+      "resolved": "github:NixOS/nixpkgs/50165c4f7eb48ce82bd063e1fb8047a0f515f8ce#act",
+      "source": "devbox-search",
+      "version": "0.2.71",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/ygb29xfz1vj86398k576kkaxpvajq1h0-act-0.2.71",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/ygb29xfz1vj86398k576kkaxpvajq1h0-act-0.2.71"
+        },
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/fdk9k1b0ihafpddc1ipvv6cvjva8f6bs-act-0.2.71",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/fdk9k1b0ihafpddc1ipvv6cvjva8f6bs-act-0.2.71"
+        },
+        "x86_64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/m28ma7rvbaaw9gpk8js6hb18lgxib9np-act-0.2.71",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/m28ma7rvbaaw9gpk8js6hb18lgxib9np-act-0.2.71"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/rpjwyxvh71327lmb0g9vnl9hajgw95r7-act-0.2.71",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/rpjwyxvh71327lmb0g9vnl9hajgw95r7-act-0.2.71"
+        }
+      }
+    },
+    "colima@latest": {
+      "last_modified": "2025-01-19T08:16:51Z",
+      "resolved": "github:NixOS/nixpkgs/50165c4f7eb48ce82bd063e1fb8047a0f515f8ce#colima",
+      "source": "devbox-search",
+      "version": "0.8.1",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/vq94skd8lgv2j994b0nikcp8pnbw8cww-colima-0.8.1",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/vq94skd8lgv2j994b0nikcp8pnbw8cww-colima-0.8.1"
+        },
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/39v8c356836spqfb1lwh80bb54bynq3j-colima-0.8.1",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/39v8c356836spqfb1lwh80bb54bynq3j-colima-0.8.1"
+        },
+        "x86_64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/8fkf8df6yqksdswnmqy7xfa4yl4xyj05-colima-0.8.1",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/8fkf8df6yqksdswnmqy7xfa4yl4xyj05-colima-0.8.1"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/5qmh66irmiaxa4myc80bwhhpk6x5y7l1-colima-0.8.1",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/5qmh66irmiaxa4myc80bwhhpk6x5y7l1-colima-0.8.1"
+        }
+      }
+    },
+    "docker@latest": {
+      "last_modified": "2025-01-31T04:26:24Z",
+      "resolved": "github:NixOS/nixpkgs/9189ac18287c599860e878e905da550aa6dec1cd#docker",
+      "source": "devbox-search",
+      "version": "27.5.1",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/11c4wdv8m1pxrg6ymd5pwq6zw326wskk-docker-27.5.1",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/11c4wdv8m1pxrg6ymd5pwq6zw326wskk-docker-27.5.1"
+        },
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/ksmj926px4bm84klmvmq10zi5dhdv57i-docker-27.5.1",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/ksmj926px4bm84klmvmq10zi5dhdv57i-docker-27.5.1"
+        },
+        "x86_64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/jdpzzccq8a9rajiqgjz58snjvbpg784m-docker-27.5.1",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/jdpzzccq8a9rajiqgjz58snjvbpg784m-docker-27.5.1"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/jnzrrks201f2abb205zs0n5dddj7az9r-docker-27.5.1",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/jnzrrks201f2abb205zs0n5dddj7az9r-docker-27.5.1"
+        }
+      }
+    }
+  }
+}

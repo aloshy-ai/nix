@@ -1,5 +1,5 @@
 { pkgs, userConfig, ... }: {
-  imports = [ ];
+  imports = [];
 
   home = {
     packages = with pkgs; [
@@ -37,10 +37,7 @@
     };
     direnv = {
       enable = true;
-      nix-direnv = {
-        enable = true;
-      };
-      enableBashIntegration = true;
+      enableZshIntegration = true;
     };
   };
 }

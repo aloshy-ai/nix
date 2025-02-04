@@ -94,6 +94,9 @@
          packages = with pkgs; [
            nixfmt
          ];
+         shellHook = pkgs.lib.optionalString pkgs.stdenv.isDarwin ''
+           ${pkgs.mac-app-util}/bin/mac-app-util sync-binary-store-apps
+         '';
        };
      };
    };
