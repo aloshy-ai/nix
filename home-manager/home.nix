@@ -2,6 +2,9 @@
   imports = [ ];
 
   home = {
+    packages = with pkgs; [
+      devbox
+    ];
     stateVersion = pkgs.lib.trivial.release;
     shellAliases = {};
     sessionPath = [];
