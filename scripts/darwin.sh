@@ -48,7 +48,7 @@ echo "BACKING UP SHELL PROFILES"
 
 echo "BUILDING AND ACTIVATING SYSTEM CONFIGURATION"
 cd ${DARWIN_CONFIG_DIR}
-if ! nix ${GITHUB_TOKEN:+--option access-tokens "github.com=${GITHUB_TOKEN}"} run nix-darwin/master#darwin-rebuild -- switch --flake .#${CURRENT_HOSTNAME}; then
+if ! nix ${GITHUB_TOKEN:+--option access-tokens "github.com=${GITHUB_TOKEN}"} run nix-darwin/master#darwin-rebuild -- switch --flake .#${CURRENT_HOSTNAME} --impure; then
     echo "ERROR: SYSTEM BUILD FAILED. CHECK THE ERROR MESSAGE ABOVE" && exit 1
 fi
 
