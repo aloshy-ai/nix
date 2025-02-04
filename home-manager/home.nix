@@ -1,4 +1,4 @@
-{ pkgs, userConfig, ... }: {
+{ pkgs, userConfig, lib, config, ... }: {
   imports = [];
 
   home = {
@@ -8,7 +8,15 @@
     stateVersion = pkgs.lib.trivial.release;
     shellAliases = {};
     sessionPath = [];
-    activation = {};
+    activation = {
+      linkDevboxConfig = lib.hm.dag.entryAfter ["writeBoundary"] ''
+        DEVBOX_GLOBAL_DIR="$(${pkgs.devbox}/bin/devbox global path)"
+        $DRY_RUN_CMD mkdir -p "$DEVBOX_GLOBAL_DIR"
+        $DRY_RUN_CMD ln -sf $VERBOSE_ARG \
+          "${config.home.homeDirectory}/.config/nix-darwin/devbox.json" \
+          "$DEVBOX_GLOBAL_DIR/devbox.json"
+      '';
+    };
     sessionVariables = {
       DIRENV_LOG_FORMAT = "";
     };

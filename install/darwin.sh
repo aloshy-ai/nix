@@ -52,10 +52,4 @@ if ! nix ${GITHUB_TOKEN:+--option access-tokens "github.com=${GITHUB_TOKEN}"} ru
     echo "ERROR: SYSTEM BUILD FAILED. CHECK THE ERROR MESSAGE ABOVE" && exit 1
 fi
 
-echo "REPLACING GLOBAL DEVBOX CONFIG WITH SYMLINK"
-DEVBOX_GLOBAL_DIR=$(devbox global path)
-[ -f "${DEVBOX_GLOBAL_DIR}/devbox.json" ] && rm "${DEVBOX_GLOBAL_DIR}/devbox.json"
-ln -s ${DARWIN_CONFIG_DIR}/devbox.json "${DEVBOX_GLOBAL_DIR}/devbox.json"
-devbox global install
-
 echo "SYSTEM SETUP COMPLETED SUCCESSFULLY. RESTART TERMINAL"
