@@ -4,6 +4,7 @@
   home = {
     packages = with pkgs; [
       devbox
+      iterm2
     ];
     stateVersion = pkgs.lib.trivial.release;
     shellAliases = {};
@@ -16,7 +17,6 @@
         $DRY_RUN_CMD ln -sf $VERBOSE_ARG \
           "${config.home-manager.users.${userConfig.username}.home.homeDirectory}/.config/nix-darwin/devbox.json" \
           "$DEVBOX_GLOBAL_DIR/devbox.json"
-        ${pkgs.devbox}/bin/devbox -q global install
       '';
     };
     sessionVariables = {
@@ -31,7 +31,7 @@
     zsh = {
       enable = true;
       initExtra = ''
-        eval "$(devbox global shellenv --init-hook)"
+        eval "$(devbox global shellenv --preserve-path-stack -r)" && hash -r
       '';
     };
     git = {

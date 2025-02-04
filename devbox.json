@@ -5,12 +5,10 @@
     "docker@latest"
   ],
   "shell": {
-    "init_hook": [
-      "echo 'Welcome to devbox!' > /dev/null"
-    ],
+    "init_hook": [],
     "scripts": {
-      "test": [
-        "echo \"Error: no test specified\" && exit 1"
+      "rebuild": [
+        "darwin-rebuild switch --flake ${HOME}/.config/nix-darwin"
       ]
     }
   }
