@@ -53,7 +53,9 @@ if ! nix ${GITHUB_TOKEN:+--option access-tokens "github.com=${GITHUB_TOKEN}"} ru
 fi
 
 echo "REPLACING GLOBAL DEVBOX CONFIG WITH SYMLINK"
-ln -s ${DARWIN_CONFIG_DIR}/devbox.json $(devbox global path)/devbox.json
+DEVBOX_GLOBAL_DIR=$(devbox global path)
+[ -f "${DEVBOX_GLOBAL_DIR}/devbox.json" ] && rm "${DEVBOX_GLOBAL_DIR}/devbox.json"
+ln -s ${DARWIN_CONFIG_DIR}/devbox.json "${DEVBOX_GLOBAL_DIR}/devbox.json"
 devbox global install
 
 echo "SYSTEM SETUP COMPLETED SUCCESSFULLY. RESTART TERMINAL"
