@@ -2,7 +2,6 @@
   imports = [ ];
 
   home = {
-    username = userConfig.username;
     packages = with pkgs; [ devbox ];
     stateVersion = pkgs.lib.trivial.release;
     shellAliases = {};
