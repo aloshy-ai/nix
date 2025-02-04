@@ -6,12 +6,15 @@
     ../modules
   ];
 
-  users.users."${userConfig.username}" = {
-    home = "/Users/${userConfig.username}";
-    description = userConfig.fullName;
-    passwordFile = pkgs.writeText "password" userConfig.hashedPassword;
-    gid = 20;
-    uid = 501;
+  users = {
+    users = {
+      "${userConfig.username}" = {
+        home = "/Users/${userConfig.username}";
+        description = userConfig.fullName;
+        gid = 20;
+        uid = 501;
+      };
+    };
   };
 
   nix = {
