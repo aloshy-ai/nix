@@ -4,7 +4,6 @@
 set -e
 REPO_HOST=${GITHUB_SERVER_URL:-https://github.com}
 REPO_PATH=${GITHUB_REPOSITORY:-aloshy-ai/nix}
-CURRENT_USER=$USER
 curl -fsSL https://ascii.aloshy.ai | bash
 
 echo "ENSURING MAC COMPATIBILITY"
