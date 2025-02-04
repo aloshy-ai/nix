@@ -20,7 +20,6 @@
       enable = true;
       initExtra = ''
         eval "$(devbox global shellenv --init-hook)"
-        eval "$(direnv hook zsh)"
       '';
     };
     git = {
