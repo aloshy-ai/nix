@@ -9,7 +9,7 @@
   users = {
     users = {
       "${userConfig.username}" = {
-        name = userConfig.username
+        name = userConfig.username;
         home = "/Users/${userConfig.username}";
       };
     };
