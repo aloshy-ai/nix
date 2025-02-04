@@ -11,6 +11,7 @@ DETECTED="$(uname -s)-$(uname -m)"
 [ "$(echo $DETECTED | tr '[:upper:]' '[:lower:]')" = "darwin-arm64" ] || { echo "INCOMPATIBLE SYSTEM DETECTED: $DETECTED" && exit 1; }
 
 echo "INSTALLING DETERMINATE NIX"
+/nix/nix-installer uninstall || true
 curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install --force --no-confirm
 . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
 
@@ -28,7 +29,6 @@ echo "RENAMING CURRENT USER TO: ${USERNAME}"
 sudo dscl . -change /Users/$USER RecordName $USER $USERNAME
 
 echo "HANDLING OLD INSTALLATION"
-[ ! -f /etc/nix/nix.conf ] && sudo mv /etc/nix/nix.conf /etc/nix/nix.conf.before-nix-darwin
 [ ! -f /etc/bashrc.before-nix-darwin ] && sudo mv /etc/bashrc /etc/bashrc.before-nix-darwin
 [ ! -f /etc/zshrc.before-nix-darwin ] && sudo mv /etc/zshrc /etc/zshrc.before-nix-darwin
 
