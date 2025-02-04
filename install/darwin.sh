@@ -25,18 +25,22 @@ echo "FETCHING USER CONFIG FROM FLAKE"
 export USERNAME=$(grep 'username = "' ${DARWIN_CONFIG_DIR}/flake.nix | sed 's/.*username = "\([^"]*\)".*/\1/')
 export FULLNAME=$(grep 'fullName = "' ${DARWIN_CONFIG_DIR}/flake.nix | sed 's/.*fullName = "\([^"]*\)".*/\1/')
 
-echo "CREATING USER IF NOT EXISTS"
 if ! dscl . -read /Users/$USERNAME &>/dev/null; then
-  sudo dscl . -create /Users/$USERNAME
-  sudo dscl . -create /Users/$USERNAME UserShell /bin/zsh
-  sudo dscl . -create /Users/$USERNAME RealName "$FULLNAME"
-  sudo dscl . -create /Users/$USERNAME UniqueID "501"
-  sudo dscl . -create /Users/$USERNAME PrimaryGroupID 20
-  sudo dscl . -create /Users/$USERNAME NFSHomeDirectory /Users/$USERNAME
-  sudo mkdir -p /Users/$USERNAME
-  sudo chown $USERNAME:staff /Users/$USERNAME
+    echo "CREATING USER: $USERNAME..."
+    sudo dscl . -create /Users/$USERNAME
+    sudo dscl . -create /Users/$USERNAME UserShell /bin/zsh
+    sudo dscl . -create /Users/$USERNAME RealName "$FULLNAME"
+    sudo dscl . -create /Users/$USERNAME UniqueID "501"
+    sudo dscl . -create /Users/$USERNAME PrimaryGroupID 20
+    sudo dscl . -create /Users/$USERNAME NFSHomeDirectory /Users/$USERNAME
+    sudo mkdir -p /Users/$USERNAME
+    sudo chown $USERNAME:staff /Users/$USERNAME
+else
+    echo "USER $USERNAME ALREADY EXISTS. SKIPPING!"
 fi
+
 
 echo "INSTALLING NIX-DARWIN ${GITHUB_TOKEN:+USING AUTHENTICATED GITHUB REQUESTS}"
 cd $DARWIN_CONFIG_DIR
 nix ${GITHUB_TOKEN:+--option access-tokens "github.com=${GITHUB_TOKEN}"} run nix-darwin/master#darwin-rebuild -- switch --flake .#${HOSTNAME}
+echo "INSTALLATION SUCCESSFUL"
