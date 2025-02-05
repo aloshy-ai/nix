@@ -2,6 +2,12 @@
     "recommendations": [
         "tal7aouy.theme",
         "tal7aouy.rainbow-bracket",
-        "pkief.material-icon-theme"
+        "chadalen.vscode-jetbrains-icon-theme",
+        "septwong.vscode-webstorm-theme",
+        "bbenoist.nix",
+        "ms-vscode.vscode-typescript-next",
+        "vercel.turbo-vsc",
+        "extensionnextjs.toolgencode",
+        "zernonia.supabase-vscode",
     ]
 }

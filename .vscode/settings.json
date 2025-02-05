@@ -1,10 +1,12 @@
 {
     "window.zoomLevel": 1,
-    "editor.fontSize": 14,
+    "editor.fontSize": 13,
     "editor.tabSize": 4,
-    "editor.fontFamily": "'FiraCode Nerd Font'",
+    "editor.fontFamily": "'JetBrainsMono Nerd Font'",
     "editor.folding": true,
     "files.autoSave": "afterDelay",
+    "editor.lineHeight": 22,
+    "editor.fontWeight": "500",
     "cursor.aipreview.enabled": true,
     "cursor.cmdk.useThemedDiffBackground": true,
     "cursor.cpp.enablePartialAccepts": true,
@@ -14,4 +16,10 @@
     "workbench.tree.indent": 14,
     "workbench.tree.renderIndentGuides": "always",
     "workbench.sideBar.location": "left",
+    "breadcrumbs.enabled": false,
+    "workbench.colorCustomizations": {
+        "activityBar.background": "#282c34",
+        "sideBar.background": "#282c34",
+        "tab.activeBackground": "#282c34"
+    }
 }

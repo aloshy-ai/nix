@@ -24,6 +24,8 @@
       "telegram"
       "webstorm"
       "visual-studio-code"
+      "claude"
+      "chatgpt"
     ];
   };
 
