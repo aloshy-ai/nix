@@ -1,0 +1,17 @@
+{
+    "window.zoomLevel": 1,
+    "editor.fontSize": 14,
+    "editor.tabSize": 4,
+    "editor.fontFamily": "'FiraCode Nerd Font'",
+    "editor.folding": true,
+    "files.autoSave": "afterDelay",
+    "cursor.aipreview.enabled": true,
+    "cursor.cmdk.useThemedDiffBackground": true,
+    "cursor.cpp.enablePartialAccepts": true,
+    "terminal.integrated.fontSize": 14,
+    "RainbowBrackets.depreciation-notice": false,
+    "RainbowBrackets.colorMode": "Consecutive",
+    "workbench.tree.indent": 14,
+    "workbench.tree.renderIndentGuides": "always",
+    "workbench.sideBar.location": "left",
+}
