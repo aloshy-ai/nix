@@ -20,6 +20,10 @@
       "cursor"
       "docker"
       "opera"
+      "inkscape"
+      "telegram"
+      "webstorm"
+      "visual-studio-code"
     ];
   };
 
