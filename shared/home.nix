@@ -1,6 +1,6 @@
 { config, lib, pkgs, custom, ... }: {
   imports = [
-    (import ./programs { inherit custom; })
+    ./programs
   ];
 
   home = {
@@ -19,7 +19,7 @@
         $DRY_RUN_CMD mkdir -p "$DEVBOX_GLOBAL_DIR"
         [ -f "$DEVBOX_GLOBAL_DIR/devbox.json" ] && $DRY_RUN_CMD rm "$DEVBOX_GLOBAL_DIR/devbox.json"
         $DRY_RUN_CMD ln -sf $VERBOSE_ARG \
-          "${config.home-manager.users.${custom.username}.home.homeDirectory}/.config/nix-darwin/devbox.json" \
+          "${config.home.homeDirectory}/.config/nix-darwin/devbox.json" \
           "$DEVBOX_GLOBAL_DIR/devbox.json"
       '';
     };

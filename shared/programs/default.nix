@@ -2,7 +2,7 @@
   imports = [
     ./direnv.nix
     ./gh.nix
-    (import ./git.nix { inherit custom; })
+    ./git.nix
     ./starship.nix
     ./vscode.nix
     ./zsh.nix

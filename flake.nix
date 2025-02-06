@@ -53,12 +53,11 @@
            useGlobalPkgs = true;
            useUserPackages = true;
            backupFileExtension = "backup";
+           extraSpecialArgs = { inherit custom; };
            sharedModules = lib.optionals (pkgs.stdenv.isDarwin) [
              mac-app-util.homeManagerModules.default
            ];
-           users.${custom.username} = { lib, ... }: import ./shared/home.nix {
-             inherit pkgs custom config lib;
-           };
+           users.${custom.username} = import ./shared/home.nix;
          };
        };
 
