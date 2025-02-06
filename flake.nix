@@ -35,18 +35,19 @@
      ];
 
      flake = let
-       hostnames = {
-         darwin = "ethermac";
-         nixos = "ethernix";
-       };
-     in rec {
        custom = {
          username = "aloshy";
          email = "noreply@aloshy.ai";
          fullName = "aloshy.🅰🅸";
          publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINzsLYdG0gkky7NCydRoqc0EMYEb61V+xsFKYJpH+ivV aloshy@ETHERFORGE.local";
          hashedPassword = "$6$OF89tQYOvaEHKCfx$KYSdQu/GHroUMovkUKUqbvUpEM51MurUpLob6E9YiEMWxvABDsrfACQxej02f9xuV5.HnNtMmpEoLDeAqCZfB1";
+         hostnames = {
+           darwin = "ethermac";
+           nixos = "ethernix";
+         };
        };
+     in rec {
+       inherit custom;
 
        homeManagerConfig = { config, pkgs, lib, system, ... }: {
          home-manager = {
@@ -75,7 +76,7 @@
            ];
          };
        in {
-         ${hostnames.darwin} = mkDarwinSystem hostnames.darwin;
+         ${custom.hostnames.darwin} = mkDarwinSystem custom.hostnames.darwin;
        };
 
        nixosConfigurations = let
@@ -91,7 +92,7 @@
            ];
          };
        in {
-         ${hostnames.nixos} = mkNixosSystem hostnames.nixos;
+         ${custom.hostnames.nixos} = mkNixosSystem custom.hostnames.nixos;
        };
      };
 
