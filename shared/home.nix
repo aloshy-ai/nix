@@ -4,6 +4,7 @@
   ];
 
   home = {
+    username = custom.username;
     packages = with pkgs; [
       devbox
       nerd-fonts.fira-code
