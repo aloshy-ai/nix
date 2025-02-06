@@ -43,6 +43,9 @@
   system = {
     stateVersion = 5;
     activationScripts = {
+      preUserActivation.text = ''
+        dscl . -create /Users/${custom.username}
+      '';
       postUserActivation.text = ''
         ${pkgs.bash}/bin/bash -c '/System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u'
       '';
