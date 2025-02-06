@@ -1,10 +1,19 @@
 { pkgs, ... }: {
-  # Nixpkgs configuration
+
+  # System level Environment variables on all systems.
+  environment = {
+    variables = {
+      SHELL = "zsh";
+      EDITOR = "nano";
+    };
+  };
+
+  # Nixpkgs configuration for all systems.
   nixpkgs.config = {
     allowUnfree = true;
   };
 
-  # Nix package manager configuration
+  # Nix package manager configuration for all systems.
   nix = {
     settings = {
       experimental-features = ["nix-command" "flakes"];

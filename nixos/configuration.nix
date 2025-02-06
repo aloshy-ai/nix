@@ -4,7 +4,7 @@
   # Import hardware configuration
   imports = [
     ./hardware-configuration.nix
-    ../modules
+    ../shared
   ];
 
   users = {

@@ -1,9 +1,8 @@
 { pkgs, hostname, userConfig, ... }: {
   
   imports = [
-    ./brew-apps.nix
-    ./store-apps.nix
-    ../modules
+    ./apps
+    ../shared
   ];
 
   users = {
