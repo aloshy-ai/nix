@@ -26,8 +26,5 @@
     sessionVariables = {
       DIRENV_LOG_FORMAT = "";
     };
-  } // lib.mkIf pkgs.stdenv.isDarwin {
-      username = custom.username;
-      homeDirectory = "/Users/${custom.username}";
   };
 }
