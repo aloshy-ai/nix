@@ -2,7 +2,7 @@
 ## Getting Started
 
 [![Built with Devbox](https://www.jetify.com/img/devbox/shield_galaxy.svg)](https://www.jetify.com/devbox/docs/contributor-quickstart/)
-[![Build Status](https://github.com/aloshy-ai/ethernix/actions/workflows/CI.yml/badge.svg)](https://github.com/aloshy-ai/nix/actions/workflows/CI.yml)
+[![Build Status](https://github.com/aloshy-ai/nix/actions/workflows/CI.yml/badge.svg)](https://github.com/aloshy-ai/nix/actions/workflows/CI.yml)
 [![Apple Silicon Ready](https://img.shields.io/badge/Apple%20Silicon-Ready-success?logo=apple&logoColor=white)](https://github.com/aloshy-ai/nix)
 [![Platform](https://img.shields.io/badge/platform-Darwin%20%7C%20Linux-blue)](https://github.com/aloshy-ai/nix)
 [![Docker Support](https://img.shields.io/badge/Docker-Enabled-2496ED?logo=docker&logoColor=white)](https://github.com/aloshy-ai/nix)
