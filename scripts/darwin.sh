@@ -18,14 +18,14 @@ echo "VERIFYING SYSTEM COMPATIBILITY"
 DETECTED="$(uname -s)-$(uname -m)"
 [ "$(echo "${DETECTED}" | tr '[:upper:]' '[:lower:]')" = "darwin-arm64" ] || { echo "SYSTEM MUST BE AN APPLE SILICON MAC (M1/M2/M3). DETECTED: ${DETECTED}" && exit 1; }
 
-echo "DOWNLOADING SYSTEM CONFIGURATION FROM ${REPO_HOST}/${REPO_PATH}"
-DARWIN_CONFIG_DIR="${CURRENT_HOME}/.config/nix-darwin"
-sudo rm -rf "${DARWIN_CONFIG_DIR}"
-git clone -q ${REPO_HOST}/${REPO_PATH} $DARWIN_CONFIG_DIR
-
 echo "CHECKING SYSTEM IDENTIFIERS"
-FLAKE_HOSTNAME=$(grep -A 1 'hostnames = {' ${DARWIN_CONFIG_DIR}/flake.nix | grep 'darwin' | sed 's/.*darwin = "\([^"]*\)".*/\1/')
-FLAKE_USERNAME=$(grep 'username = "' ${DARWIN_CONFIG_DIR}/flake.nix | sed 's/.*username = "\([^"]*\)".*/\1/')
+echo "DOWNLOADING TEMPORARY CONFIGURATION FROM ${REPO_HOST}/${REPO_PATH}"
+TEMP_CONFIG_DIR="/tmp/nix-config"
+sudo rm -rf "${TEMP_CONFIG_DIR}"
+git clone -q ${REPO_HOST}/${REPO_PATH} "${TEMP_CONFIG_DIR}"
+
+FLAKE_HOSTNAME=$(grep -A 1 'hostnames = {' "${TEMP_CONFIG_DIR}/flake.nix" | grep 'darwin' | sed 's/.*darwin = "\([^"]*\)".*/\1/')
+FLAKE_USERNAME=$(grep 'username = "' "${TEMP_CONFIG_DIR}/flake.nix" | sed 's/.*username = "\([^"]*\)".*/\1/')
 [ -z "$FLAKE_HOSTNAME" ] && echo "ERROR: INVALID CONFIGURATION FILE. HOSTNAME NOT FOUND IN FLAKE.NIX" && exit 1
 [ -z "$FLAKE_USERNAME" ] && echo "ERROR: INVALID CONFIGURATION FILE. USERNAME NOT FOUND IN FLAKE.NIX" && exit 1
 
@@ -72,6 +72,11 @@ security delete-generic-password -l "${VOLUME_NAME}" -s "Encrypted volume passwo
 echo "INSTALLING NIX"
 curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install --force --no-confirm
 . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+
+echo "DOWNLOADING SYSTEM CONFIGURATION FROM ${REPO_HOST}/${REPO_PATH}"
+DARWIN_CONFIG_DIR="${HOME}/.config/nix-darwin"
+sudo rm -rf "${DARWIN_CONFIG_DIR}"
+git clone -q ${REPO_HOST}/${REPO_PATH} "${DARWIN_CONFIG_DIR}"
 
 echo "BACKING UP SHELL PROFILES"
 [ ! -f /etc/bashrc.before-nix-darwin ] && sudo mv /etc/bashrc /etc/bashrc.before-nix-darwin
