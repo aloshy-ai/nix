@@ -39,24 +39,22 @@ echo "ASSERTING HOSTNAME TO: ${FLAKE_HOSTNAME}"
     echo "HOSTNAMES SET SUCCESSFULLY: $(hostname)"
 }
 
-echo "ASSERTING USERNAME TO: ${FLAKE_USERNAME}"
+echo "ASSERTING USERNAME AND HOME DIRECTORY TO: ${FLAKE_USERNAME}"
 [ "${CURRENT_USERNAME}" != "${FLAKE_USERNAME}" ] && {
     echo "SETTING UP sudo PRIVILEGES FOR ${FLAKE_USERNAME}"
-    echo "${FLAKE_USERNAME} ALL=(ALL) NOPASSWD:ALL" | sudo tee /etc/sudoers.d/${FLAKE_USERNAME}
-    echo "RENAMING USER ${CURRENT_USERNAME} TO ${FLAKE_USERNAME}"
+    echo "${FLAKE_USERNAME} ALL=(ALL) NOPASSWD:ALL" | sudo tee /etc/sudoers.d/${FLAKE_USERNAME}    
+    echo "UPDATING USER IDENTITY"
     sudo dscl . -change /Users/${CURRENT_USERNAME} RecordName ${CURRENT_USERNAME} ${FLAKE_USERNAME}
-    sudo dscl . -change /Users/${FLAKE_USERNAME} NFSHomeDirectory "/Users/${CURRENT_USERNAME}" "/Users/${FLAKE_USERNAME}"
-    CURRENT_USERNAME="${FLAKE_USERNAME}"
-    echo "USERNAME CHANGED SUCCESSFULLY: $(whoami)"
-}
-
-echo "ASSERTING HOME DIRECTORY TO: /Users/${FLAKE_USERNAME}"
-[ "${CURRENT_HOME}" != "/Users/${FLAKE_USERNAME}" ] && {
-    echo "Updating home directory from ${CURRENT_HOME} to /Users/${FLAKE_USERNAME}"
+    CURRENT_USERNAME="${FLAKE_USERNAME}"   
+    echo "UPDATING HOME DIRECTORY"
     sudo mv "${CURRENT_HOME}" "/Users/${FLAKE_USERNAME}"
+    sudo dscl . -create /Users/${FLAKE_USERNAME} NFSHomeDirectory "/Users/${FLAKE_USERNAME}"
     export HOME="/Users/${FLAKE_USERNAME}"
-    CURRENT_HOME="${HOME}"
-    echo "HOME DIRECTORY UPDATED SUCCESSFULLY: ${HOME}"
+    CURRENT_HOME="${HOME}"   
+    echo "IDENTITY CHANGE COMPLETED:"
+    echo "- USERNAME: $(whoami)"
+    echo "- HOME: ${HOME}"
+    echo "- DSCL HOME: $(dscl . -read /Users/${FLAKE_USERNAME} NFSHomeDirectory | sed 's/NFSHomeDirectory: //')"
 }
 
 echo "CLEANING UP PREVIOUS INSTALLATION"
