@@ -52,7 +52,7 @@ in
       '';
     };
 
-    defaults = {
+    defaults = lib.mkIf (!isCI) {
       menuExtraClock.Show24Hour = true;
 
       dock = {
