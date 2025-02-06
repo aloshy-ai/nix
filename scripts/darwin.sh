@@ -29,7 +29,7 @@ FLAKE_USERNAME=$(grep 'username = "' ${DARWIN_CONFIG_DIR}/flake.nix | sed 's/.*u
 [ -z "$FLAKE_HOSTNAME" ] && echo "ERROR: INVALID CONFIGURATION FILE. HOSTNAME NOT FOUND IN FLAKE.NIX" && exit 1
 [ -z "$FLAKE_USERNAME" ] && echo "ERROR: INVALID CONFIGURATION FILE. USERNAME NOT FOUND IN FLAKE.NIX" && exit 1
 
-echo "UPDATING SYSTEM IDENTIFIERS"
+echo "ASSERTING HOSTNAME TO: ${FLAKE_HOSTNAME}"
 if [ "${CURRENT_HOSTNAME}" != "${FLAKE_HOSTNAME}" ]; then
     echo "Setting system hostnames to ${FLAKE_HOSTNAME}"
     sudo scutil --set ComputerName "${FLAKE_HOSTNAME}"
@@ -46,7 +46,7 @@ echo "ASSERTING USERNAME TO: ${FLAKE_USERNAME}"
     echo "RENAMING USER FROM $(whoami) to ${FLAKE_USERNAME}"
     sudo sysadminctl -editUser "${CURRENT_USERNAME}" -newUsername "${FLAKE_USERNAME}"
     CURRENT_USERNAME="${FLAKE_USERNAME}"
-    echo "USER RENAMED SUCCESSFULLY: ${CURRENT_USERNAME} ==> $(whoami)"
+    echo "USER RENAMED SUCCESSFULLY: $(whoami)"
 }
 
 echo "ASSERTING HOME TO: /Users/${FLAKE_USERNAME}"
@@ -61,7 +61,7 @@ echo "ASSERTING HOME TO: /Users/${FLAKE_USERNAME}"
     sudo rsync -av --backup "${CURRENT_HOME}/" "/Users/${FLAKE_USERNAME}/"
     sudo dscl . -change "/Users/${CURRENT_USERNAME}" NFSHomeDirectory "${CURRENT_HOME}" "/Users/${FLAKE_USERNAME}"
     sudo chown -R "${CURRENT_USERNAME}:staff" "/Users/${FLAKE_USERNAME}"
-    echo "HOME DIRECTORY RELOCATED SUCCESSFULLY: ${CURRENT_HOME} ==> /Users/$(whoami)"
+    echo "HOME DIRECTORY RELOCATED SUCCESSFULLY: /Users/$(whoami)"
 }
 
 echo "CLEANING UP PREVIOUS INSTALLATION"
