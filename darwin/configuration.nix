@@ -22,16 +22,31 @@
     };
   };
 
+  security = {
+    sudo = {
+      enable = true;
+    };
+    pam = {
+      enableSudoTouchIdAuth = true;
+    };
+  };
+
+  services = {
+    nix-daemon = {
+      enable = true;
+    };
+  };
+
+  networking = {
+    hostName = hostname;
+    computerName = hostname;
+  };
+
   system = {
     stateVersion = 5;
-    
-    # Reload settings without requiring logout
     activationScripts = {
       postUserActivation.text = ''
-        ${pkgs.bash}/bin/bash -c '
-          # Activate settings
-          /System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u
-        '
+        ${pkgs.bash}/bin/bash -c '/System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u'
       '';
     };
 
@@ -128,15 +143,5 @@
       enableKeyMapping = true;
       remapCapsLockToEscape = false;
     };
-  };
-
-  # System configuration
-  security.pam.enableSudoTouchIdAuth = true;
-  services.nix-daemon.enable = true;
-
-  # Networking configuration
-  networking = {
-    hostName = hostname;
-    computerName = hostname;
   };
 } 
