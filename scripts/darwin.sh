@@ -50,7 +50,7 @@ sudo sysadminctl -addUser "${FLAKE_USERNAME}" -password "${PASSWORD}" -admin -sh
 sudo sysadminctl -autologin set -userName "${FLAKE_USERNAME}" -password "${PASSWORD}"
 [ "$IS_CI" = true ] && (echo "${FLAKE_USERNAME} ALL=(ALL) NOPASSWD: ALL" | sudo tee "/etc/sudoers.d/${FLAKE_USERNAME}" > /dev/null && sudo chmod 0440 "/etc/sudoers.d/${FLAKE_USERNAME}")
 [ "$IS_CI" = false ] && sudo sysadminctl -resetPasswordFor "${FLAKE_USERNAME}" interactive
-[ "$IS_CI" = true ] && sudo -u "${FLAKE_USERNAME}" sh -c "defaults write com.apple.dock persistent-apps -array; killall Dock"
+[ "$IS_CI" = true ] && echo "${PASSWORD}" | sudo -S -u "${FLAKE_USERNAME}" sh -c "defaults write com.apple.dock persistent-apps -array; killall Dock"
 sudo dseditgroup -o edit -a "${FLAKE_USERNAME}" -t user admin
 echo "USER CREATED SUCCESSFULLY: ${FLAKE_USERNAME}"
     elif [ "${CURRENT_HOME}" = "${FLAKE_HOME}" ]; then
