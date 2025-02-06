@@ -8,6 +8,7 @@ CURRENT_HOSTNAME=$(hostname)
 CURRENT_USERNAME=$(whoami)
 CURRENT_HOME=$HOME
 VOLUME_NAME="Nix Store"
+SHELL=$(echo /bin/${SHELL:-zsh})
 
 curl -fsSL https://ascii.aloshy.ai | sh
 
@@ -43,8 +44,10 @@ if [ "${CURRENT_USERNAME}" != "${FLAKE_USERNAME}" ]; then
     if [ ! -d "${FLAKE_HOME}" ]; then
         echo "CREATING NEW ADMIN USER: ${FLAKE_USERNAME}"
         PASSWORD=$(openssl rand -hex 4)  # generates 8 character password
-        sudo sysadminctl -addUser "${FLAKE_USERNAME}" -password "${PASSWORD}" -admin -shell /bin/zsh
+        sudo sysadminctl -addUser "${FLAKE_USERNAME}" -password "${PASSWORD}" -admin -shell "${SHELL}" -home "${FLAKE_HOME}"
+        sudo sysadminctl -autologin set -userName "${FLAKE_USERNAME}" -password "${PASSWORD}"
         [ -z "${CI}" ] && sudo sysadminctl -resetPasswordFor "${FLAKE_USERNAME}"
+        [ -n "${CI}" ] && sudo -u "${FLAKE_USERNAME}" sh -c "defaults write com.apple.dock persistent-apps -array; killall Dock"
         sudo dseditgroup -o edit -a "${FLAKE_USERNAME}" -t user admin
         echo "USER CREATED SUCCESSFULLY: ${FLAKE_USERNAME}"
     elif [ "${CURRENT_HOME}" = "${FLAKE_HOME}" ]; then
