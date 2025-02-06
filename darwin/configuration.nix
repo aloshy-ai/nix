@@ -23,9 +23,6 @@
   };
 
   security = {
-    sudo = {
-      enable = true;
-    };
     pam = {
       enableSudoTouchIdAuth = true;
     };
