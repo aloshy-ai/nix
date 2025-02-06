@@ -42,9 +42,9 @@ if [ "${CURRENT_USERNAME}" != "${FLAKE_USERNAME}" ]; then
     
     if [ ! -d "${FLAKE_HOME}" ]; then
         echo "CREATING NEW ADMIN USER: ${FLAKE_USERNAME}"
-        TEMP_PASS=$(openssl rand -hex 4)  # generates 8 character password
-        sudo sysadminctl -addUser "${FLAKE_USERNAME}" -password "${TEMP_PASS}" -admin -shell /bin/zsh
-        echo "CREATED USER ${FLAKE_USERNAME} WITH PASSWORD: ${TEMP_PASS}"
+        PASSWORD=$(openssl rand -hex 4)  # generates 8 character password
+        sudo sysadminctl -addUser "${FLAKE_USERNAME}" -password "${PASSWORD}" -admin -shell /bin/zsh
+        echo "CREATED USER ${FLAKE_USERNAME} WITH PASSWORD: ${PASSWORD}"
         sudo dseditgroup -o edit -a "${FLAKE_USERNAME}" -t user admin
         echo "USER CREATED SUCCESSFULLY: ${FLAKE_USERNAME}"
     elif [ "${CURRENT_HOME}" = "${FLAKE_HOME}" ]; then
@@ -86,4 +86,4 @@ echo "BUILDING AND ACTIVATING SYSTEM CONFIGURATION"
 cd ${DARWIN_CONFIG_DIR}
 nix ${GITHUB_TOKEN:+--option access-tokens "github.com=${GITHUB_TOKEN}"} run nix-darwin/master#darwin-rebuild -- switch --flake .#${CURRENT_HOSTNAME} --impure
 
-echo "SYSTEM SETUP COMPLETED SUCCESSFULLY. RESTART TERMINAL"
+echo "SYSTEM SETUP COMPLETED SUCCESSFULLY. ${PASSWORD:+NOTE ${FLAKE_USERNAME}'s PASSWORD: ${PASSWORD}}"
