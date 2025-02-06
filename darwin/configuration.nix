@@ -12,6 +12,7 @@
         home = "/Users/${custom.username}";
         createHome = true;
         shell = pkgs.zsh;
+        isHidden = false;
       };
     };
   };
