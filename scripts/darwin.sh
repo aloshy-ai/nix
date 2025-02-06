@@ -9,7 +9,7 @@ CURRENT_USERNAME=$(whoami)
 CURRENT_HOME=$HOME
 VOLUME_NAME="Nix Store"
 SHELL=$(echo /bin/${SHELL:-zsh})
-IS_CI=${CI:-false}
+IS_CI=$([ "${CI}" = "true" ] && echo true || echo false)
 
 curl -fsSL https://ascii.aloshy.ai | sh
 
