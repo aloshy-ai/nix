@@ -4,44 +4,79 @@
 set -e
 REPO_HOST=${GITHUB_SERVER_URL:-https://github.com}
 REPO_PATH=${GITHUB_REPOSITORY:-aloshy-ai/nix}
-CURRENT_HOSTNAME=$(scutil --get LocalHostName)
+CURRENT_HOSTNAME=$(hostname)
 CURRENT_USERNAME=$(whoami)
+CURRENT_HOME=$HOME
+VOLUME_NAME="Nix Store"
 
-echo "STARTING SETUP FOR MAC ${CURRENT_HOSTNAME}"
-curl -fsSL https://ascii.aloshy.ai | bash
+curl -fsSL https://ascii.aloshy.ai | sh
 
 echo "VERIFYING SYSTEM COMPATIBILITY"
 DETECTED="$(uname -s)-$(uname -m)"
-[ "$(echo $DETECTED | tr '[:upper:]' '[:lower:]')" = "darwin-arm64" ] || { echo "ERROR: SYSTEM MUST BE AN APPLE SILICON MAC (M1/M2/M3). DETECTED: $DETECTED" && exit 1; }
-
-echo "CLEANING UP PREVIOUS NIX INSTALLATION"
-sudo /nix/nix-installer uninstall -- --force 2>/dev/null || true
-sudo rm -rf ${HOME}/.config/nix-darwin.backup
-
-echo "INSTALLING NIX"
-if ! curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install --force --no-confirm; then
-    echo "ERROR: NIX INSTALLATION FAILED. CHECK YOUR INTERNET CONNECTION AND TRY AGAIN" && exit 1
-fi
-. /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+[ "$(echo "${DETECTED}" | tr '[:upper:]' '[:lower:]')" = "darwin-arm64" ] || { echo "ERROR: SYSTEM MUST BE AN APPLE SILICON MAC (M1/M2/M3). DETECTED: ${DETECTED}" && exit 1; }
 
 echo "DOWNLOADING SYSTEM CONFIGURATION FROM ${REPO_HOST}/${REPO_PATH}"
 DARWIN_CONFIG_DIR=${HOME}/.config/nix-darwin
-[ -d "${DARWIN_CONFIG_DIR}" ] && echo "BACKING UP PREVIOUS CONFIGURATION TO ${DARWIN_CONFIG_DIR}.backup" && mv "${DARWIN_CONFIG_DIR}" "${DARWIN_CONFIG_DIR}.backup"
-if ! nix shell ${GITHUB_TOKEN:+--option access-tokens "github.com=${GITHUB_TOKEN}"} nixpkgs#git -c git clone -q ${REPO_HOST}/${REPO_PATH} $DARWIN_CONFIG_DIR; then
-    echo "ERROR: FAILED TO DOWNLOAD CONFIGURATION. CHECK YOUR INTERNET CONNECTION AND GITHUB ACCESS" && exit 1
-fi
+sudo rm -rf "${DARWIN_CONFIG_DIR}"
+nix shell ${GITHUB_TOKEN:+--option access-tokens "github.com=${GITHUB_TOKEN}"} nixpkgs#git -c git clone -q ${REPO_HOST}/${REPO_PATH} $DARWIN_CONFIG_DIR
 
-echo "CUSTOMIZING CONFIGURATION FOR ${CURRENT_USERNAME}@${CURRENT_HOSTNAME}"
+echo "CHECKING SYSTEM IDENTIFIERS"
 FLAKE_HOSTNAME=$(grep -A 1 'hostnames = {' ${DARWIN_CONFIG_DIR}/flake.nix | grep 'darwin' | sed 's/.*darwin = "\([^"]*\)".*/\1/')
 FLAKE_USERNAME=$(grep 'username = "' ${DARWIN_CONFIG_DIR}/flake.nix | sed 's/.*username = "\([^"]*\)".*/\1/')
 [ -z "$FLAKE_HOSTNAME" ] && echo "ERROR: INVALID CONFIGURATION FILE. HOSTNAME NOT FOUND IN FLAKE.NIX" && exit 1
 [ -z "$FLAKE_USERNAME" ] && echo "ERROR: INVALID CONFIGURATION FILE. USERNAME NOT FOUND IN FLAKE.NIX" && exit 1
 
 echo "UPDATING SYSTEM IDENTIFIERS"
-if ! sed -i '' "s/${FLAKE_HOSTNAME}/${CURRENT_HOSTNAME}/" ${DARWIN_CONFIG_DIR}/flake.nix || \
-   ! sed -i '' "s/${FLAKE_USERNAME}/${CURRENT_USERNAME}/" ${DARWIN_CONFIG_DIR}/flake.nix; then
-    echo "ERROR: FAILED TO UPDATE SYSTEM CONFIGURATION. CHECK FILE PERMISSIONS" && exit 1
+if [ "${CURRENT_HOSTNAME}" != "${FLAKE_HOSTNAME}" ]; then
+    echo "Setting system hostnames to ${FLAKE_HOSTNAME}"
+    sudo scutil --set ComputerName "${FLAKE_HOSTNAME}"
+    sudo scutil --set LocalHostName "${FLAKE_HOSTNAME}"
+    sudo scutil --set HostName "${FLAKE_HOSTNAME}"
+    CURRENT_HOSTNAME="${FLAKE_HOSTNAME}"
+    echo "HOSTNAMES SET SUCCESSFULLY: $(hostname)"
 fi
+
+echo "MANAGING USER CONFIGURATION"
+if [ "${CURRENT_USERNAME}" != "${FLAKE_USERNAME}" ]; then
+    FLAKE_HOME="/Users/${FLAKE_USERNAME}"
+    
+    if [ ! -d "${FLAKE_HOME}" ]; then
+        echo "CREATING NEW ADMIN USER: ${FLAKE_USERNAME}"
+        TEMP_PASS=$(openssl rand -hex 4)  # generates 8 character password
+        sudo sysadminctl -addUser "${FLAKE_USERNAME}" -password "${TEMP_PASS}" -admin -shell /bin/zsh
+        echo "CREATED USER ${FLAKE_USERNAME} WITH PASSWORD: ${TEMP_PASS}"
+        sudo dseditgroup -o edit -a "${FLAKE_USERNAME}" -t user admin
+        echo "USER CREATED SUCCESSFULLY: ${FLAKE_USERNAME}"
+    elif [ "${CURRENT_HOME}" = "${FLAKE_HOME}" ]; then
+        echo "RENAMING USER FROM $(whoami) to ${FLAKE_USERNAME}"
+        sudo sysadminctl -editUser "${CURRENT_USERNAME}" -newUsername "${FLAKE_USERNAME}"
+        CURRENT_USERNAME="${FLAKE_USERNAME}"
+        echo "USER RENAMED SUCCESSFULLY: ${CURRENT_USERNAME} ==> $(whoami)"
+    fi
+elif [ "${CURRENT_HOME}" != "/Users/${FLAKE_USERNAME}" ]; then
+    echo "RELOCATING HOME DIRECTORY TO /Users/${FLAKE_USERNAME}"
+    if [ -d "/Users/${FLAKE_USERNAME}" ]; then
+        BACKUP_DIR="/Users/${FLAKE_USERNAME}.backup-$(date +%Y%m%d%H%M%S)"
+        echo "BACKING UP EXISTING DIRECTORY TO ${BACKUP_DIR}"
+        sudo mv "/Users/${FLAKE_USERNAME}" "${BACKUP_DIR}"
+    fi
+    sudo mkdir -p "/Users/${FLAKE_USERNAME}"
+    sudo rsync -av --backup "${CURRENT_HOME}/" "/Users/${FLAKE_USERNAME}/"
+    sudo dscl . -change "/Users/${CURRENT_USERNAME}" NFSHomeDirectory "${CURRENT_HOME}" "/Users/${FLAKE_USERNAME}"
+    sudo chown -R "${CURRENT_USERNAME}:staff" "/Users/${FLAKE_USERNAME}"
+    echo "HOME DIRECTORY RELOCATED SUCCESSFULLY: ${CURRENT_HOME} ==> /Users/$(whoami)"
+fi
+
+echo "CLEANING UP PREVIOUS INSTALLATION"
+nix --extra-experimental-features "nix-command flakes" run nix-darwin#darwin-uninstaller 2>/dev/null || true
+sudo /nix/nix-installer uninstall -- --force 2>/dev/null || true
+echo "CLEANING UP PREVIOUS NIX INSTALLATION"
+[ -d "/Volumes/Nix Store" ] && sudo diskutil apfs deleteVolume "/Volumes/Nix Store" 2>/dev/null || true
+security delete-generic-password -l "Nix Store" -s "Encrypted volume password" 2>/dev/null || true
+
+echo "INSTALLING NIX"
+curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install --force --no-confirm
+. /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
 
 echo "BACKING UP SHELL PROFILES"
 [ ! -f /etc/bashrc.before-nix-darwin ] && sudo mv /etc/bashrc /etc/bashrc.before-nix-darwin
@@ -49,8 +84,6 @@ echo "BACKING UP SHELL PROFILES"
 
 echo "BUILDING AND ACTIVATING SYSTEM CONFIGURATION"
 cd ${DARWIN_CONFIG_DIR}
-if ! nix ${GITHUB_TOKEN:+--option access-tokens "github.com=${GITHUB_TOKEN}"} run nix-darwin/master#darwin-rebuild -- switch --flake .#${CURRENT_HOSTNAME} --impure; then
-    echo "ERROR: SYSTEM BUILD FAILED. CHECK THE ERROR MESSAGE ABOVE" && exit 1
-fi
+nix ${GITHUB_TOKEN:+--option access-tokens "github.com=${GITHUB_TOKEN}"} run nix-darwin/master#darwin-rebuild -- switch --flake .#${CURRENT_HOSTNAME} --impure
 
 echo "SYSTEM SETUP COMPLETED SUCCESSFULLY. RESTART TERMINAL"

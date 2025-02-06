@@ -52,7 +52,7 @@ on `devbox shell` and on `devbox run`.
 
 ### devbox run darwin-install
 ```sh
-curl -fsSL https://darwin.aloshy.ai | bash
+curl -fsSL https://darwin.aloshy.ai | sh
 ```
 &ensp;
 
