@@ -10,6 +10,8 @@
       nerd-fonts.jetbrains-mono
       nerd-fonts.symbols-only
     ];
+    username = custom.username;
+    homeDirectory = "/Users/${custom.username}";
     stateVersion = pkgs.lib.trivial.release;
     shellAliases = {};
     sessionPath = [];
