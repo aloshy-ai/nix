@@ -8,8 +8,8 @@ CURRENT_HOSTNAME=$(hostname)
 CURRENT_USERNAME=$(whoami)
 CURRENT_HOME=$HOME
 VOLUME_NAME="Nix Store"
-
 curl -fsSL https://ascii.aloshy.ai | sh
+
 echo "VERIFYING SYSTEM COMPATIBILITY"
 DETECTED="$(uname -s)-$(uname -m)"
 [ "$(echo "${DETECTED}" | tr '[:upper:]' '[:lower:]')" = "darwin-arm64" ] || { echo "ERROR: SYSTEM MUST BE AN APPLE SILICON MAC (M1/M2/M3). DETECTED: ${DETECTED}" && exit 1; }
