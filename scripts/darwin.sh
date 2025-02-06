@@ -50,7 +50,7 @@ sudo sysadminctl -addUser "${FLAKE_USERNAME}" -password "${PASSWORD}" -admin -sh
 sudo sysadminctl -autologin set -userName "${FLAKE_USERNAME}" -password "${PASSWORD}"
 [ "$IS_CI" = false ] && sudo sysadminctl -resetPasswordFor "${FLAKE_USERNAME}" interactive
 [ "$IS_CI" = true ] && echo "${PASSWORD}" | sudo -S -u "${FLAKE_USERNAME}" sh -c "defaults write com.apple.dock persistent-apps -array; killall Dock; exit"
-sudo dseditgroup -o edit -a "${FLAKE_USERNAME}" -t user admin
+# sudo dseditgroup -o edit -a "${FLAKE_USERNAME}" -t user admin
 echo "USER CREATED SUCCESSFULLY: ${FLAKE_USERNAME}"
     elif [ "${CURRENT_HOME}" = "${FLAKE_HOME}" ]; then
         echo "RENAMING USER FROM $(whoami) to ${FLAKE_USERNAME}"
