@@ -43,17 +43,30 @@ echo "ASSERTING USERNAME AND HOME DIRECTORY TO: ${FLAKE_USERNAME}"
 [ "${CURRENT_USERNAME}" != "${FLAKE_USERNAME}" ] && {
     echo "SETTING UP sudo PRIVILEGES FOR ${FLAKE_USERNAME}"
     echo "${FLAKE_USERNAME} ALL=(ALL) NOPASSWD:ALL" | sudo tee /etc/sudoers.d/${FLAKE_USERNAME}    
+    
     echo "UPDATING USER IDENTITY"
     sudo dscl . -change /Users/${CURRENT_USERNAME} RecordName ${CURRENT_USERNAME} ${FLAKE_USERNAME}
     CURRENT_USERNAME="${FLAKE_USERNAME}"   
+    
     echo "UPDATING HOME DIRECTORY"
     sudo mv "${CURRENT_HOME}" "/Users/${FLAKE_USERNAME}"
     sudo dscl . -create /Users/${FLAKE_USERNAME} NFSHomeDirectory "/Users/${FLAKE_USERNAME}"
     export HOME="/Users/${FLAKE_USERNAME}"
     CURRENT_HOME="${HOME}"   
+    
+    echo "UPDATING GITHUB ACTIONS ENVIRONMENT"
+    sudo mkdir -p "/Users/${FLAKE_USERNAME}/work/_temp"
+    export RUNNER_TEMP="/Users/${FLAKE_USERNAME}/work/_temp"
+    export RUNNER_TOOL_CACHE="/Users/${FLAKE_USERNAME}/work/_tool"
+    export RUNNER_WORKSPACE="/Users/${FLAKE_USERNAME}/work"
+    sudo chown -R ${FLAKE_USERNAME} "/Users/${FLAKE_USERNAME}/work"
+    
     echo "IDENTITY CHANGE COMPLETED:"
     echo "- USERNAME: $(whoami)"
     echo "- HOME: ${HOME}"
+    echo "- RUNNER_TEMP: ${RUNNER_TEMP}"
+    echo "- RUNNER_TOOL_CACHE: ${RUNNER_TOOL_CACHE}"
+    echo "- RUNNER_WORKSPACE: ${RUNNER_WORKSPACE}"
     echo "- DSCL HOME: $(dscl . -read /Users/${FLAKE_USERNAME} NFSHomeDirectory | sed 's/NFSHomeDirectory: //')"
 }
 
