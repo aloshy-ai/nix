@@ -39,16 +39,6 @@ if [ "${CURRENT_HOSTNAME}" != "${FLAKE_HOSTNAME}" ]; then
     echo "HOSTNAMES SET SUCCESSFULLY: $(hostname)"
 fi
 
-echo "MANAGING USER CONFIGURATION"
-
-echo "ASSERTING USERNAME TO: ${FLAKE_USERNAME}"
-[ "${CURRENT_USERNAME}" != "${FLAKE_USERNAME}" ] && {
-    echo "RENAMING USER FROM $(whoami) to ${FLAKE_USERNAME}"
-    sudo sysadminctl -editUser "${CURRENT_USERNAME}" -newUsername "${FLAKE_USERNAME}"
-    CURRENT_USERNAME="${FLAKE_USERNAME}"
-    echo "USER RENAMED SUCCESSFULLY: $(whoami)"
-}
-
 echo "CLEANING UP PREVIOUS INSTALLATION"
 nix --extra-experimental-features "nix-command flakes" run nix-darwin#darwin-uninstaller 2>/dev/null || true
 sudo /nix/nix-installer uninstall -- --force 2>/dev/null || true
@@ -66,6 +56,6 @@ echo "BACKING UP SHELL PROFILES"
 
 echo "BUILDING AND ACTIVATING SYSTEM CONFIGURATION"
 cd ${DARWIN_CONFIG_DIR}
-nix ${GITHUB_TOKEN:+--option access-tokens "github.com=${GITHUB_TOKEN}"} run nix-darwin/master#darwin-rebuild -- switch --flake .#${CURRENT_HOSTNAME} --impure
+nix ${GITHUB_TOKEN:+--option access-tokens "github.com=${GITHUB_TOKEN}"} run nix-darwin/master#darwin-rebuild -- switch --flake .#$(hostname) --impure
 
 echo "SYSTEM SETUP COMPLETED SUCCESSFULLY. ${CI:+NOTE ${FLAKE_USERNAME}'s PASSWORD: ${PASSWORD}}"
