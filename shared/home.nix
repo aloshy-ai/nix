@@ -5,6 +5,9 @@
 
   home = {
     username = custom.username;
+    homeDirectory = if pkgs.stdenv.isDarwin 
+      then "/Users/${custom.username}"
+      else "/home/${custom.username}";
     packages = with pkgs; [
       devbox
       nerd-fonts.fira-code
