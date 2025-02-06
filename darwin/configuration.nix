@@ -1,4 +1,4 @@
-{ pkgs, hostname, userConfig, ... }: {
+{ pkgs, hostname, custom, ... }: {
   
   imports = [
     ./apps
@@ -7,9 +7,9 @@
 
   users = {
     users = {
-      "${userConfig.username}" = {
-        name = userConfig.username;
-        home = "/Users/${userConfig.username}";
+      "${custom.username}" = {
+        name = custom.username;
+        home = "/Users/${custom.username}";
         createHome = true;
         shell = pkgs.zsh;
       };
@@ -18,7 +18,7 @@
 
   nix = {
     settings = {
-      trusted-users = [ "@admin" userConfig.username ];
+      trusted-users = [ "@admin" custom.username ];
     };
   };
 

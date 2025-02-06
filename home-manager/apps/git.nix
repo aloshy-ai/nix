@@ -1,9 +1,9 @@
-{ userConfig, ... }: {
+{ custom, ... }: {
   programs = {
     git = {
       enable = true;
-      userName = userConfig.fullName;
-      userEmail = userConfig.email;
+      userName = custom.fullName;
+      userEmail = custom.email;
       lfs = {
         enable = true;
       };

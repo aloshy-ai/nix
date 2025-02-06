@@ -1,4 +1,4 @@
-{ pkgs, hostname, userConfig, ... }:
+{ pkgs, hostname, custom, ... }:
 
 {
   # Import hardware configuration
@@ -9,17 +9,17 @@
 
   users = {
     users = {
-      ${userConfig.username} = {
+      ${custom.username} = {
         isNormalUser = true;
         extraGroups = [ "wheel" ];
         openssh = {
           authorizedKeys = {
             keys = [
-              userConfig.publicKey
+              custom.publicKey
             ];
           };
         };
-        hashedPassword = userConfig.hashedPassword;
+        hashedPassword = custom.hashedPassword;
       };
       runner = {
         isNormalUser = true;

@@ -40,7 +40,7 @@
          nixos = "ethernix";
        };
      in rec {
-       userConfig = {
+       custom = {
          username = "aloshy";
          email = "noreply@aloshy.ai";
          fullName = "aloshy.🅰🅸";
@@ -56,8 +56,8 @@
            sharedModules = lib.optionals (pkgs.stdenv.isDarwin) [
              mac-app-util.homeManagerModules.default
            ];
-           users.${userConfig.username} = { lib, ... }: import ./home-manager/home.nix {
-             inherit pkgs userConfig config lib;
+           users.${custom.username} = { lib, ... }: import ./home-manager/home.nix {
+             inherit pkgs custom config lib;
            };
          };
        };
@@ -66,7 +66,7 @@
          mkDarwinSystem = hostname: nix-darwin.lib.darwinSystem {
            system = "aarch64-darwin";
            specialArgs = { 
-             inherit userConfig hostname ci-detector;
+             inherit custom hostname ci-detector;
            };
            modules = [
              ./darwin/configuration.nix
@@ -83,7 +83,7 @@
          mkNixosSystem = hostname: nixpkgs.lib.nixosSystem {
            system = "aarch64-linux";
            specialArgs = { 
-             inherit userConfig hostname;
+             inherit custom hostname;
            };
            modules = [
              ./nixos/configuration.nix
