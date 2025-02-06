@@ -1,4 +1,4 @@
-{ pkgs, hostname, custom, ci-detector, ... }: 
+{ pkgs, lib, hostname, custom, ci-detector, ... }: 
 let
   isCI = ci-detector.lib.inCI;
 in
