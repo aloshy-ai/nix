@@ -10,8 +10,6 @@
       nerd-fonts.jetbrains-mono
       nerd-fonts.symbols-only
     ];
-    username = custom.username;
-    homeDirectory = "/Users/${custom.username}";
     stateVersion = pkgs.lib.trivial.release;
     shellAliases = {};
     sessionPath = [];
@@ -28,5 +26,8 @@
     sessionVariables = {
       DIRENV_LOG_FORMAT = "";
     };
+  } // lib.mkIf pkgs.stdenv.isDarwin {
+      username = custom.username;
+      homeDirectory = "/Users/${custom.username}";
   };
 }
