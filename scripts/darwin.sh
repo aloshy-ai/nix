@@ -29,11 +29,6 @@ echo "INSTALLING NIX"
 curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install --force --no-confirm
 . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
 
-echo "DOWNLOADING SYSTEM CONFIGURATION FROM ${REPO_HOST}/${REPO_PATH}"
-DARWIN_CONFIG_DIR=${HOME}/.config/nix-darwin
-sudo rm -rf "${DARWIN_CONFIG_DIR}"
-git clone -q ${REPO_HOST}/${REPO_PATH} $DARWIN_CONFIG_DIR
-
 echo "CHECKING SYSTEM IDENTIFIERS"
 FLAKE_HOSTNAME=$(grep -A 1 'hostnames = {' ${DARWIN_CONFIG_DIR}/flake.nix | grep 'darwin' | sed 's/.*darwin = "\([^"]*\)".*/\1/')
 FLAKE_USERNAME=$(grep 'username = "' ${DARWIN_CONFIG_DIR}/flake.nix | sed 's/.*username = "\([^"]*\)".*/\1/')
@@ -71,6 +66,11 @@ echo "ASSERTING USERNAME AND HOME DIRECTORY TO: ${FLAKE_USERNAME}"
 echo "BACKING UP SHELL PROFILES"
 [ ! -f /etc/bashrc.before-nix-darwin ] && sudo mv /etc/bashrc /etc/bashrc.before-nix-darwin
 [ ! -f /etc/zshrc.before-nix-darwin ] && sudo mv /etc/zshrc /etc/zshrc.before-nix-darwin
+
+echo "DOWNLOADING SYSTEM CONFIGURATION FROM ${REPO_HOST}/${REPO_PATH}"
+DARWIN_CONFIG_DIR=${HOME}/.config/nix-darwin
+sudo rm -rf "${DARWIN_CONFIG_DIR}"
+git clone -q ${REPO_HOST}/${REPO_PATH} $DARWIN_CONFIG_DIR
 
 echo "BUILDING AND ACTIVATING SYSTEM CONFIGURATION"
 cd ${DARWIN_CONFIG_DIR}
