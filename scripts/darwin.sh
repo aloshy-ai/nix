@@ -40,37 +40,29 @@ if [ "${CURRENT_HOSTNAME}" != "${FLAKE_HOSTNAME}" ]; then
 fi
 
 echo "MANAGING USER CONFIGURATION"
-if [ "${CURRENT_USERNAME}" != "${FLAKE_USERNAME}" ]; then
-    FLAKE_HOME="/Users/${FLAKE_USERNAME}"
-    
-    if [ ! -d "${FLAKE_HOME}" ]; then
-        echo "CREATING NEW ADMIN USER: ${FLAKE_USERNAME}"
-PASSWORD=$(openssl rand -hex 4)  # generates 8 character password
-sudo sysadminctl -addUser "${FLAKE_USERNAME}" -password "${PASSWORD}" -admin -shell "${SHELL}" -home "${FLAKE_HOME}"
-sudo sysadminctl -autologin set -userName "${FLAKE_USERNAME}" -password "${PASSWORD}"
-[ "$IS_CI" = false ] && sudo sysadminctl -resetPasswordFor "${FLAKE_USERNAME}" interactive
-[ "$IS_CI" = true ] && echo "${PASSWORD}" | sudo -S -u "${FLAKE_USERNAME}" sh -c "defaults write com.apple.dock persistent-apps -array; killall Dock; exit"
-# sudo dseditgroup -o edit -a "${FLAKE_USERNAME}" -t user admin
-echo "USER CREATED SUCCESSFULLY: ${FLAKE_USERNAME}"
-    elif [ "${CURRENT_HOME}" = "${FLAKE_HOME}" ]; then
-        echo "RENAMING USER FROM $(whoami) to ${FLAKE_USERNAME}"
-        sudo sysadminctl -editUser "${CURRENT_USERNAME}" -newUsername "${FLAKE_USERNAME}"
-        CURRENT_USERNAME="${FLAKE_USERNAME}"
-        echo "USER RENAMED SUCCESSFULLY: ${CURRENT_USERNAME} ==> $(whoami)"
-    fi
-elif [ "${CURRENT_HOME}" != "/Users/${FLAKE_USERNAME}" ]; then
+
+echo "ASSERTING USERNAME TO: ${FLAKE_USERNAME}"
+[ "${CURRENT_USERNAME}" != "${FLAKE_USERNAME}" ] && {
+    echo "RENAMING USER FROM $(whoami) to ${FLAKE_USERNAME}"
+    sudo sysadminctl -editUser "${CURRENT_USERNAME}" -newUsername "${FLAKE_USERNAME}"
+    CURRENT_USERNAME="${FLAKE_USERNAME}"
+    echo "USER RENAMED SUCCESSFULLY: ${CURRENT_USERNAME} ==> $(whoami)"
+}
+
+echo "ASSERTING HOME TO: /Users/${FLAKE_USERNAME}"
+[ "${CURRENT_HOME}" != "/Users/${FLAKE_USERNAME}" ] && {
     echo "RELOCATING HOME DIRECTORY TO /Users/${FLAKE_USERNAME}"
-    if [ -d "/Users/${FLAKE_USERNAME}" ]; then
+    [ -d "/Users/${FLAKE_USERNAME}" ] && {
         BACKUP_DIR="/Users/${FLAKE_USERNAME}.backup-$(date +%Y%m%d%H%M%S)"
         echo "BACKING UP EXISTING DIRECTORY TO ${BACKUP_DIR}"
         sudo mv "/Users/${FLAKE_USERNAME}" "${BACKUP_DIR}"
-    fi
+    }
     sudo mkdir -p "/Users/${FLAKE_USERNAME}"
     sudo rsync -av --backup "${CURRENT_HOME}/" "/Users/${FLAKE_USERNAME}/"
     sudo dscl . -change "/Users/${CURRENT_USERNAME}" NFSHomeDirectory "${CURRENT_HOME}" "/Users/${FLAKE_USERNAME}"
     sudo chown -R "${CURRENT_USERNAME}:staff" "/Users/${FLAKE_USERNAME}"
     echo "HOME DIRECTORY RELOCATED SUCCESSFULLY: ${CURRENT_HOME} ==> /Users/$(whoami)"
-fi
+}
 
 echo "CLEANING UP PREVIOUS INSTALLATION"
 nix --extra-experimental-features "nix-command flakes" run nix-darwin#darwin-uninstaller 2>/dev/null || true
