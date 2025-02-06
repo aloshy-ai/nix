@@ -55,5 +55,46 @@
       enable = true;
       enableZshIntegration = true;
     };
+    vscode = {
+      enable = true;
+      package = pkgs.vscode;
+      extensions = with pkgs.vscode-extensions; [
+        bbenoist.nix
+        github.vscode-github-actions
+        github.copilot
+        github.copilot-chat
+        github.codespaces
+        github.github-vscode-theme
+        github.vscode-pull-request-github
+        esbenp.prettier-vscode
+      ];
+      userSettings = {
+        "window.zoomLevel" = 1;
+        "editor.fontSize" = 13;
+        "editor.tabSize" = 4;
+        "editor.fontFamily" = "'JetBrainsMono Nerd Font'";
+        "editor.folding" = true;
+        "files.autoSave" = "afterDelay";
+        "editor.lineHeight" = 22;
+        "editor.fontWeight" = "500";
+        "editor.defaultFormatter" = "esbenp.prettier-vscode";
+        "editor.formatOnSave" = true;
+        "cursor.aipreview.enabled" = true;
+        "cursor.cmdk.useThemedDiffBackground" = true;
+        "cursor.cpp.enablePartialAccepts" = true;
+        "terminal.integrated.fontSize" = 14;
+        "RainbowBrackets.depreciation-notice" = false;
+        "RainbowBrackets.colorMode" = "Consecutive";
+        "workbench.tree.indent" = 14;
+        "workbench.tree.renderIndentGuides" = "always";
+        "workbench.sideBar.location" = "left";
+        "breadcrumbs.enabled" = false;
+        "workbench.colorCustomizations" = {
+          "activityBar.background" = "#282c34";
+          "sideBar.background" = "#282c34";
+          "tab.activeBackground" = "#282c34";
+        };
+      };
+    };
   };
 }

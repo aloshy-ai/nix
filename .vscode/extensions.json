@@ -9,5 +9,13 @@
         "vercel.turbo-vsc",
         "extensionnextjs.toolgencode",
         "zernonia.supabase-vscode",
+        "github.vscode-github-actions",
+        "github.remotehub",
+        "github.copilot",
+        "github.copilot-chat",
+        "github.codespaces",
+        "github.github-vscode-theme",
+        "github.vscode-pull-request-github",
+        "esbenp.prettier-vscode"
     ]
 }
