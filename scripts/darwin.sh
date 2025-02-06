@@ -29,14 +29,14 @@ FLAKE_USERNAME=$(grep 'username = "' ${DARWIN_CONFIG_DIR}/flake.nix | sed 's/.*u
 [ -z "$FLAKE_HOSTNAME" ] && echo "ERROR: INVALID CONFIGURATION FILE. HOSTNAME NOT FOUND IN FLAKE.NIX" && exit 1
 [ -z "$FLAKE_USERNAME" ] && echo "ERROR: INVALID CONFIGURATION FILE. USERNAME NOT FOUND IN FLAKE.NIX" && exit 1
 
-echo "ASSERTING HOSTNAME TO: ${FLAKE_HOSTNAME}"
-if [ "${CURRENT_HOSTNAME}" != "${FLAKE_HOSTNAME}" ]; then
-    echo "Setting system hostnames to ${FLAKE_HOSTNAME}"
-    sudo scutil --set ComputerName "${FLAKE_HOSTNAME}"
-    sudo scutil --set LocalHostName "${FLAKE_HOSTNAME}"
-    sudo scutil --set HostName "${FLAKE_HOSTNAME}"
-    CURRENT_HOSTNAME="${FLAKE_HOSTNAME}"
-    echo "HOSTNAMES SET SUCCESSFULLY: $(hostname)"
+echo "ASSERTING USERNAME TO: ${FLAKE_USERNAME}"
+if [ "${CURRENT_USERNAME}" != "${FLAKE_USERNAME}" ]; then
+    echo "Setting up sudo privileges for ${FLAKE_USERNAME}"
+    echo "${FLAKE_USERNAME} ALL=(ALL) NOPASSWD:ALL" | sudo tee /etc/sudoers.d/${FLAKE_USERNAME}
+    echo "Renaming user ${CURRENT_USERNAME} to ${FLAKE_USERNAME}"
+    sudo dscl . -change /Users/${CURRENT_USERNAME} RecordName ${CURRENT_USERNAME} ${FLAKE_USERNAME}
+    CURRENT_USERNAME="${FLAKE_USERNAME}"
+    echo "USERNAME CHANGED SUCCESSFULLY: $(whoami)"
 fi
 
 $echo "ASSERTING USERNAME TO: ${FLAKE_USERNAME}"
