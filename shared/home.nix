@@ -1,6 +1,6 @@
 { config, lib, pkgs, custom, ... }: {
   imports = [
-    (import ./apps { inherit custom; })
+    (import ./programs { inherit custom; })
   ];
 
   home = {

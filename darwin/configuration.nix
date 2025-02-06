@@ -1,7 +1,7 @@
 { pkgs, hostname, custom, ... }: {
   
   imports = [
-    ./apps
+    ./brew.nix
     ../shared
   ];
 
