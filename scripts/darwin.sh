@@ -47,10 +47,10 @@ if [ "${CURRENT_USERNAME}" != "${FLAKE_USERNAME}" ]; then
         echo "CREATING NEW ADMIN USER: ${FLAKE_USERNAME}"
         PASSWORD=$(openssl rand -hex 4)  # generates 8 character password
         sudo sysadminctl -addUser "${FLAKE_USERNAME}" -password "${PASSWORD}" -admin -shell "${SHELL}" -home "${FLAKE_HOME}"
-        [ "$IS_CI" = false ] && sudo sysadminctl -resetPasswordFor "${FLAKE_USERNAME}" interactive
-
-        [ "$IS_CI" = true ] && sudo -u "${FLAKE_USERNAME}" sh -c "defaults write com.apple.dock persistent-apps -array; killall Dock"
         sudo dseditgroup -o edit -a "${FLAKE_USERNAME}" -t user admin
+        sudo sysadminctl -autologin set -userName "${FLAKE_USERNAME}" -password "${PASSWORD}"
+        [ "$IS_CI" = false ] && sudo sysadminctl -resetPasswordFor "${FLAKE_USERNAME}" interactive
+        [ "$IS_CI" = true ] && sudo -u "${FLAKE_USERNAME}" sh -c "defaults write com.apple.dock persistent-apps -array; killall Dock"
         echo "USER CREATED SUCCESSFULLY: ${FLAKE_USERNAME}"
     elif [ "${CURRENT_HOME}" = "${FLAKE_HOME}" ]; then
         echo "RENAMING USER FROM $(whoami) to ${FLAKE_USERNAME}"
