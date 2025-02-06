@@ -17,7 +17,7 @@ DETECTED="$(uname -s)-$(uname -m)"
 echo "DOWNLOADING SYSTEM CONFIGURATION FROM ${REPO_HOST}/${REPO_PATH}"
 DARWIN_CONFIG_DIR=${HOME}/.config/nix-darwin
 sudo rm -rf "${DARWIN_CONFIG_DIR}"
-git ${GITHUB_TOKEN:+--option access-tokens "github.com=${GITHUB_TOKEN}"} -c git clone -q ${REPO_HOST}/${REPO_PATH} $DARWIN_CONFIG_DIR
+git ${GITHUB_TOKEN:+--option access-tokens "github.com=${GITHUB_TOKEN}"} clone -q ${REPO_HOST}/${REPO_PATH} $DARWIN_CONFIG_DIR
 
 echo "CHECKING SYSTEM IDENTIFIERS"
 FLAKE_HOSTNAME=$(grep -A 1 'hostnames = {' ${DARWIN_CONFIG_DIR}/flake.nix | grep 'darwin' | sed 's/.*darwin = "\([^"]*\)".*/\1/')
