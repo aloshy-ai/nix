@@ -12,7 +12,7 @@ SHELL=$(echo /bin/${SHELL:-zsh})
 IS_CI=$([ "${CI}" = "true" ] && echo true || echo false)
 
 curl -fsSL https://ascii.aloshy.ai | sh
-echo "DETECTED ${IS_CI || "NON-"}CI ENVIRONMENT"
+echo "DETECTED $([ "$IS_CI" = true ] && echo "" || echo "NON-")CI ENVIRONMENT"
 
 echo "VERIFYING SYSTEM COMPATIBILITY"
 DETECTED="$(uname -s)-$(uname -m)"
