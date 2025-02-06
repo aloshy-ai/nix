@@ -18,19 +18,8 @@ echo "VERIFYING SYSTEM COMPATIBILITY"
 DETECTED="$(uname -s)-$(uname -m)"
 [ "$(echo "${DETECTED}" | tr '[:upper:]' '[:lower:]')" = "darwin-arm64" ] || { echo "SYSTEM MUST BE AN APPLE SILICON MAC (M1/M2/M3). DETECTED: ${DETECTED}" && exit 1; }
 
-echo "CLEANING UP PREVIOUS INSTALLATION"
-nix --extra-experimental-features "nix-command flakes" run nix-darwin#darwin-uninstaller 2>/dev/null || true
-sudo /nix/nix-installer uninstall -- --force 2>/dev/null || true
-echo "CLEANING UP PREVIOUS NIX INSTALLATION"
-[ -d "/Volumes/Nix Store" ] && sudo diskutil apfs deleteVolume "/Volumes/Nix Store" 2>/dev/null || true
-security delete-generic-password -l "${VOLUME_NAME}" -s "Encrypted volume password" 2>/dev/null || true
-
-echo "INSTALLING NIX"
-curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install --force --no-confirm
-. /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
-
 echo "DOWNLOADING SYSTEM CONFIGURATION FROM ${REPO_HOST}/${REPO_PATH}"
-DARWIN_CONFIG_DIR=$(echo "${HOME}/.config/nix-darwin")
+DARWIN_CONFIG_DIR="${CURRENT_HOME}/.config/nix-darwin"
 sudo rm -rf "${DARWIN_CONFIG_DIR}"
 git clone -q ${REPO_HOST}/${REPO_PATH} $DARWIN_CONFIG_DIR
 
@@ -68,12 +57,28 @@ echo "ASSERTING USERNAME AND HOME DIRECTORY TO: ${FLAKE_USERNAME}"
     echo "- DSCL HOME: $(dscl . -read /Users/${FLAKE_USERNAME} NFSHomeDirectory | sed 's/NFSHomeDirectory: //')"
 }
 
+echo "VERIFYING IDENTITY CHANGES"
+[ "$(whoami)" != "${FLAKE_USERNAME}" ] && { echo "ERROR: USERNAME MISMATCH" && exit 1; }
+[ "${HOME}" != "/Users/${FLAKE_USERNAME}" ] && { echo "ERROR: HOME DIRECTORY MISMATCH" && exit 1; }
+[ "$(dscl . -read /Users/${FLAKE_USERNAME} NFSHomeDirectory | sed 's/NFSHomeDirectory: //')" != "/Users/${FLAKE_USERNAME}" ] && { echo "ERROR: DSCL HOME MISMATCH" && exit 1; }
+
+echo "CLEANING UP PREVIOUS INSTALLATION"
+nix --extra-experimental-features "nix-command flakes" run nix-darwin#darwin-uninstaller 2>/dev/null || true
+sudo /nix/nix-installer uninstall -- --force 2>/dev/null || true
+echo "CLEANING UP PREVIOUS NIX INSTALLATION"
+[ -d "/Volumes/${VOLUME_NAME}" ] && sudo diskutil apfs deleteVolume "/Volumes/${VOLUME_NAME}" 2>/dev/null || true
+security delete-generic-password -l "${VOLUME_NAME}" -s "Encrypted volume password" 2>/dev/null || true
+
+echo "INSTALLING NIX"
+curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install --force --no-confirm
+. /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+
 echo "BACKING UP SHELL PROFILES"
 [ ! -f /etc/bashrc.before-nix-darwin ] && sudo mv /etc/bashrc /etc/bashrc.before-nix-darwin
 [ ! -f /etc/zshrc.before-nix-darwin ] && sudo mv /etc/zshrc /etc/zshrc.before-nix-darwin
 
 echo "BUILDING AND ACTIVATING SYSTEM CONFIGURATION"
-cd ${DARWIN_CONFIG_DIR}
+cd "${DARWIN_CONFIG_DIR}"
 nix ${GITHUB_TOKEN:+--option access-tokens "github.com=${GITHUB_TOKEN}"} run nix-darwin/master#darwin-rebuild -- switch --flake .#$(hostname) --impure
 
 echo "SYSTEM SETUP COMPLETED SUCCESSFULLY"
