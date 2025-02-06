@@ -1,4 +1,8 @@
-{ pkgs, hostname, custom, ... }: {
+{ pkgs, hostname, custom, ci-detector, ... }: 
+let
+  isCI = ci-detector.lib.inCI;
+in
+{
   
   imports = [
     ./brew.nix
