@@ -1,5 +1,12 @@
 { pkgs, ... }: {
 
+
+  security = {
+    sudo = {
+      enable = true;
+    };
+  };
+
   # System level Environment variables on all systems.
   environment = {
     variables = {
