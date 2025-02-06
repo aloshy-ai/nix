@@ -45,6 +45,7 @@ echo "ASSERTING USERNAME TO: ${FLAKE_USERNAME}"
     echo "${FLAKE_USERNAME} ALL=(ALL) NOPASSWD:ALL" | sudo tee /etc/sudoers.d/${FLAKE_USERNAME}
     echo "RENAMING USER ${CURRENT_USERNAME} TO ${FLAKE_USERNAME}"
     sudo dscl . -change /Users/${CURRENT_USERNAME} RecordName ${CURRENT_USERNAME} ${FLAKE_USERNAME}
+    sudo dscl . -change /Users/${FLAKE_USERNAME} NFSHomeDirectory "/Users/${CURRENT_USERNAME}" "/Users/${FLAKE_USERNAME}"
     CURRENT_USERNAME="${FLAKE_USERNAME}"
     echo "USERNAME CHANGED SUCCESSFULLY: $(whoami)"
 }
