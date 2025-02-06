@@ -49,21 +49,6 @@ echo "ASSERTING USERNAME TO: ${FLAKE_USERNAME}"
     echo "USER RENAMED SUCCESSFULLY: $(whoami)"
 }
 
-echo "ASSERTING HOME TO: /Users/${FLAKE_USERNAME}"
-[ "${CURRENT_HOME}" != "/Users/${FLAKE_USERNAME}" ] && {
-    echo "RELOCATING HOME DIRECTORY TO /Users/${FLAKE_USERNAME}"
-    [ -d "/Users/${FLAKE_USERNAME}" ] && {
-        BACKUP_DIR="/Users/${FLAKE_USERNAME}.backup-$(date +%Y%m%d%H%M%S)"
-        echo "BACKING UP EXISTING DIRECTORY TO ${BACKUP_DIR}"
-        sudo mv "/Users/${FLAKE_USERNAME}" "${BACKUP_DIR}"
-    }
-    sudo mkdir -p "/Users/${FLAKE_USERNAME}"
-    sudo rsync -av --backup "${CURRENT_HOME}/" "/Users/${FLAKE_USERNAME}/"
-    sudo dscl . -change "/Users/${CURRENT_USERNAME}" NFSHomeDirectory "${CURRENT_HOME}" "/Users/${FLAKE_USERNAME}"
-    sudo chown -R "${CURRENT_USERNAME}:staff" "/Users/${FLAKE_USERNAME}"
-    echo "HOME DIRECTORY RELOCATED SUCCESSFULLY: /Users/$(whoami)"
-}
-
 echo "CLEANING UP PREVIOUS INSTALLATION"
 nix --extra-experimental-features "nix-command flakes" run nix-darwin#darwin-uninstaller 2>/dev/null || true
 sudo /nix/nix-installer uninstall -- --force 2>/dev/null || true

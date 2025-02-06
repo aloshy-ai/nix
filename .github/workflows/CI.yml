@@ -56,17 +56,6 @@ jobs:
     runs-on: macos-latest
     timeout-minutes: 15
     steps:
-      - name: Maximize build space
-        uses: AdityaGarg8/remove-unwanted-software@v4
-        with:
-          remove-dotnet: 'true'
-          remove-android: 'true'
-          remove-haskell: 'true'
-          remove-codeql: 'true'
-          remove-docker-images: 'true'
-          remove-large-packages: 'true'
-          remove-cached-tools: 'true'
-
       - uses: actions/checkout@v4
 
       - name: Set up GitHub Token
