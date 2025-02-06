@@ -39,16 +39,6 @@ if [ "${CURRENT_USERNAME}" != "${FLAKE_USERNAME}" ]; then
     echo "USERNAME CHANGED SUCCESSFULLY: $(whoami)"
 fi
 
-$echo "ASSERTING USERNAME TO: ${FLAKE_USERNAME}"
-if [ "${CURRENT_USERNAME}" != "${FLAKE_USERNAME}" ]; then
-    echo "Setting up sudo privileges for ${FLAKE_USERNAME}"
-    echo "${FLAKE_USERNAME} ALL=(ALL) NOPASSWD:ALL" | sudo tee /etc/sudoers.d/${FLAKE_USERNAME}
-    echo "Renaming user ${CURRENT_USERNAME} to ${FLAKE_USERNAME}"
-    sudo dscl . -change /Users/${CURRENT_USERNAME} RecordName ${CURRENT_USERNAME} ${FLAKE_USERNAME}
-    CURRENT_USERNAME="${FLAKE_USERNAME}"
-    echo "USERNAME CHANGED SUCCESSFULLY: $(whoami)"
-fi
-
 echo "CLEANING UP PREVIOUS INSTALLATION"
 nix --extra-experimental-features "nix-command flakes" run nix-darwin#darwin-uninstaller 2>/dev/null || true
 sudo /nix/nix-installer uninstall -- --force 2>/dev/null || true
