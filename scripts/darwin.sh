@@ -8,6 +8,7 @@ CURRENT_HOSTNAME=$(hostname)
 CURRENT_USERNAME=$(whoami)
 CURRENT_HOME=$HOME
 VOLUME_NAME="Nix Store"
+
 curl -fsSL https://ascii.aloshy.ai | sh
 
 echo "VERIFYING SYSTEM COMPATIBILITY"
