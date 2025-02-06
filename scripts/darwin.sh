@@ -39,8 +39,10 @@ if [ "${CURRENT_HOSTNAME}" != "${FLAKE_HOSTNAME}" ]; then
     echo "HOSTNAMES SET SUCCESSFULLY: $(hostname)"
 fi
 
-echo "ASSERTING USERNAME TO: ${FLAKE_USERNAME}"
+$echo "ASSERTING USERNAME TO: ${FLAKE_USERNAME}"
 if [ "${CURRENT_USERNAME}" != "${FLAKE_USERNAME}" ]; then
+    echo "Setting up sudo privileges for ${FLAKE_USERNAME}"
+    echo "${FLAKE_USERNAME} ALL=(ALL) NOPASSWD:ALL" | sudo tee /etc/sudoers.d/${FLAKE_USERNAME}
     echo "Renaming user ${CURRENT_USERNAME} to ${FLAKE_USERNAME}"
     sudo dscl . -change /Users/${CURRENT_USERNAME} RecordName ${CURRENT_USERNAME} ${FLAKE_USERNAME}
     CURRENT_USERNAME="${FLAKE_USERNAME}"
