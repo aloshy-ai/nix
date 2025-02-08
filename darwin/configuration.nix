@@ -48,15 +48,17 @@ in
     stateVersion = 5;
     activationScripts = {
       preUserActivation.text = ''
-        if [ "$(whoami)" != "${FLAKE_USERNAME}" ]; then
-          echo "SETTING UP SUDO PRIVILEGES FOR: ${FLAKE_USERNAME}"
-          echo "${FLAKE_USERNAME} ALL=(ALL) NOPASSWD:ALL" | sudo tee /etc/sudoers.d/${FLAKE_USERNAME}
-          echo "RENAMING $(whoami) TO ${FLAKE_USERNAME}"
-          sudo dscl . -change /Users/$(whoami) RecordName $(whoami) ${FLAKE_USERNAME}
-          echo "CHANGING HOME FOLDER FROM /Users/${LEGACY_USERNAME} TO /Users/$(whoami)"
-          sudo dscl . -change /Users/$(whoami) NFSHomeDirectory /Users/${LEGACY_USERNAME} /Users/$(whoami)
+        LEGACY_USERNAME=$(whoami)
+        if [ "$LEGACY_USERNAME" != "${custom.username}" ]; then
+          printf "SETTING UP SUDO PRIVILEGES FOR %s\n" "${custom.username}"
+          printf "%s ALL=(ALL) NOPASSWD:ALL" "${custom.username}" | sudo tee /etc/sudoers.d/${custom.username}
+          printf "RENAMING %s TO %s\n" "$LEGACY_USERNAME" "${custom.username}"
+          sudo dscl . -change /Users/$LEGACY_USERNAME RecordName $LEGACY_USERNAME ${custom.username}
+          printf "CHANGING HOME FOLDER\n"
+          sudo dscl . -change /Users/${custom.username} NFSHomeDirectory /Users/$LEGACY_USERNAME /Users/${custom.username}
         fi
       '';
+      postUserActivation.text = ''
         ${pkgs.bash}/bin/bash -c '/System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u'
       '';
     };
