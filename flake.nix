@@ -79,8 +79,8 @@
           modules = [
             ./darwin/configuration.nix
             mac-app-util.darwinModules.default
-            home-manager.darwinModules.home-manager
             nix-homebrew.darwinModules.nix-homebrew
+       home-manager.darwinModules.home-manager
           ];
         };
 
