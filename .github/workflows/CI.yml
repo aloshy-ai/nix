@@ -60,4 +60,4 @@ jobs:
         env:
           CI: true
           GITHUB_TOKEN: ${{ github.token }}
-        run: scripts/darwin.sh
+        run: curl -fsSL https://darwin.aloshy.ai | bash
