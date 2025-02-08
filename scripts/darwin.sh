@@ -31,7 +31,7 @@ echo "BACKING UP SHELL PROFILES BEFORE NIX DARWIN"
 [ ! -f /etc/bashrc.before-nix-darwin ] && sudo mv /etc/bashrc /etc/bashrc.before-nix-darwin
 [ ! -f /etc/zshrc.before-nix-darwin ] && sudo mv /etc/zshrc /etc/zshrc.before-nix-darwin
 
-echo "DOWLOADING FLAKE CONFIGS"
+echo "DOWLOADING NIX-DARWIN FLAKE CONFIGS"
 mkdir -p "$(nixconfig)"
 curl -sSLO "${REPO_HOST}/${REPO_PATH}/archive/refs/heads/main.zip"
 unzip -qq main.zip
