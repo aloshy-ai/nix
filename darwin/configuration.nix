@@ -49,13 +49,13 @@ in
     activationScripts = {
       preUserActivation.text = ''
         LEGACY_USERNAME="$(whoami)"
-        if [ "$LEGACY_USERNAME" != "${custom.username}" ]; then
+        if [ "${LEGACY_USERNAME}" != "${custom.username}" ]; then
           printf "SETTING UP SUDO PRIVILEGES FOR %s\n" "${custom.username}"
           printf "%s ALL=(ALL) NOPASSWD:ALL" "${custom.username}" | sudo tee /etc/sudoers.d/${custom.username}
-          printf "RENAMING %s TO %s\n" "$LEGACY_USERNAME" "${custom.username}"
-          sudo dscl . -change /Users/$LEGACY_USERNAME RecordName $LEGACY_USERNAME ${custom.username}
+          printf "RENAMING %s TO %s\n" "${LEGACY_USERNAME}" "${custom.username}"
+          sudo dscl . -change /Users/${LEGACY_USERNAME} RecordName ${LEGACY_USERNAME} ${custom.username}
           printf "CHANGING HOME FOLDER\n"
-          sudo dscl . -change /Users/${custom.username} NFSHomeDirectory /Users/$LEGACY_USERNAME /Users/${custom.username}
+          sudo dscl . -change /Users/${custom.username} NFSHomeDirectory /Users/${LEGACY_USERNAME} /Users/${custom.username}
         fi
       '';
       postUserActivation.text = ''
