@@ -1,4 +1,4 @@
-{ pkgs, lib, custom ... }: {
+{ pkgs, lib, custom, ... }: {
 
   # System level Environment variables on all systems.
   environment = {
