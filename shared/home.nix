@@ -7,7 +7,7 @@
     useGlobalPkgs = true;
     useUserPackages = true;
     backupFileExtension = "backup";
-  }
+  };
 
   home = {
     username = custom.username;
