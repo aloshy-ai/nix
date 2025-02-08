@@ -8,6 +8,13 @@
     };
   };
 
+  # Home-Manager configuration for all systems
+  home-manager = {
+    useGlobalPkgs = true;
+    useUserPackages = true;
+    backupFileExtension = "backup";
+  };
+
   # Nixpkgs configuration for all systems.
   nixpkgs.config = {
     allowUnfree = true;
