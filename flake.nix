@@ -73,7 +73,6 @@
         homeManagerConfig = { config, pkgs, lib, system, ... }: {
           home-manager = {
             extraSpecialArgs = { inherit custom; };
-            users.${custom.username} = import ./shared/home.nix;
           };
         };
 
