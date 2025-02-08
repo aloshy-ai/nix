@@ -1,6 +1,22 @@
 {
  inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nix-homebrew = {
+      url = "github:zhaofengli-wip/nix-homebrew";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    homebrew-core = {
+      url = "github:homebrew/homebrew-core";
+      flake = false;
+    };
+    homebrew-cask = {
+      url = "github:homebrew/homebrew-cask";
+      flake = false;
+    };
+    homebrew-bundle = {
+      url = "github:homebrew/homebrew-bundle";
+      flake = false;
+    };
     flake-parts = {
       url = "github:hercules-ci/flake-parts";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -27,7 +43,7 @@
     allow-impure-eval = true;
   };
 
- outputs = inputs@{ flake-parts, nixpkgs, home-manager, nix-darwin, mac-app-util, ci-detector, ... }:
+ outputs = inputs@{ flake-parts, nixpkgs, home-manager, nix-darwin, mac-app-util, ci-detector, nix-homebrew, homebrew-core, homebrew-cask, homebrew-bundle, ... }:
    flake-parts.lib.mkFlake { inherit inputs; } {
      systems = [
        "x86_64-linux"
@@ -66,13 +82,14 @@
          mkDarwinSystem = hostname: nix-darwin.lib.darwinSystem {
            system = "aarch64-darwin";
            specialArgs = { 
-             inherit custom hostname ci-detector;
+             inherit custom hostname ci-detector nix-homebrew homebrew-core homebrew-cask homebrew-bundle;
            };
            modules = [
              ./darwin/configuration.nix
              mac-app-util.darwinModules.default
              home-manager.darwinModules.home-manager
              homeManagerConfig
+             nix-homebrew.darwinModules.nix-homebrew
            ];
          };
        in {

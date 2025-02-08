@@ -1,65 +1,60 @@
-{ pkgs, lib, config, ci-detector, ... }: 
+{ config, lib, pkgs, custom, ci-detector, ... }:
 let
   isCI = ci-detector.lib.inCI;
 in
 {
-  # Apps installed from Homebrew, exclusively on macOS.
+  nix-homebrew = {
+    enable = true;
+    enableRosetta = true;
+    user = custom.username;
+    
+    # Optional: Declarative tap management
+    mutableTaps = true; # Set to false if you want fully declarative tap management
+    
+    # Your taps will be automatically managed since you've set them up in flake inputs
+    taps = {
+      "homebrew/homebrew-core" = config.homebrew-core;
+      "homebrew/homebrew-cask" = config.homebrew-cask;
+      "homebrew/homebrew-bundle" = config.homebrew-bundle;
+    };
+  };
+
+  # Regular Homebrew configuration
   homebrew = {
     enable = true;
+    
+    onActivation = {
+      autoUpdate = true;
+      upgrade = true;
+      cleanup = "zap";
+    };
 
-    # Install CLI apps from Homebrew (brew install)
+    # Example packages - adjust these to your needs
     brews = [
       "nvm"
     ];
 
-    # Install GUI apps from Homebrew Cask (brew install --cask)
     casks = [
-      "cursor"
       "docker"
-      "opera"
-      "inkscape"
-      "telegram"
-      "webstorm"
-      "claude"
-      "chatgpt"
     ];
 
-    # Install apps from the Mac App Store (Disabled on CI until `mas-cli` authentication is implemented).
-    # The number is the app's ID from the App Store URL (e.g. https://apps.apple.com/ca/app/copyclip-clipboard-history/id595191960)
-    masApps = lib.mkIf (!isCI) {
-      copyclip = 595191960;
-    };
-
-    # Homebrew Configuration
-    onActivation = {
-      autoUpdate = true; # Automatically update packages when a new version is available.
-      upgrade = true; # Upgrade all installed packages to the latest version.
-      cleanup = "zap"; # Remove all installed packages that are not listed in the taps or brews.
-    };
-
-    # Install additional taps from Homebrew (brew tap)
     taps = [
-      "homebrew/services" # For running services (e.g. `brew services run redis`)
+      "homebrew/services"
     ];
-  };
 
-  # Configure Homebrew mirrors.
-  environment = {
-    variables = {
-      HOMEBREW_API_DOMAIN = "https://mirrors.tuna.tsinghua.edu.cn/homebrew-bottles/api";
-      HOMEBREW_BOTTLE_DOMAIN = "https://mirrors.tuna.tsinghua.edu.cn/homebrew-bottles";
-      HOMEBREW_BREW_GIT_REMOTE = "https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/brew.git";
-      HOMEBREW_CORE_GIT_REMOTE = "https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/homebrew-core.git";
-      HOMEBREW_PIP_INDEX_URL = "https://pypi.tuna.tsinghua.edu.cn/simple";
+    # Mac App Store apps (disabled in CI)
+    masApps = lib.mkIf (!isCI) {
+      # Example: 
+      # copyclip = 595191960;
     };
   };
 
-  # Set Homebrew environment variables before activation.
-  system = {
-    activationScripts = {
-      preHomebrewActivation = {
-        text = lib.mkBefore (lib.concatStringsSep "\n" (lib.mapAttrsToList (name: value: "export ${name}=${value}") config.environment.variables));
-      };
-    };
+  # Optional: Configure Homebrew mirrors if needed
+  environment.variables = {
+    HOMEBREW_API_DOMAIN = "https://mirrors.tuna.tsinghua.edu.cn/homebrew-bottles/api";
+    HOMEBREW_BOTTLE_DOMAIN = "https://mirrors.tuna.tsinghua.edu.cn/homebrew-bottles";
+    HOMEBREW_BREW_GIT_REMOTE = "https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/brew.git";
+    HOMEBREW_CORE_GIT_REMOTE = "https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/homebrew-core.git";
+    HOMEBREW_PIP_INDEX_URL = "https://pypi.tuna.tsinghua.edu.cn/simple";
   };
 }
