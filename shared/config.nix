@@ -8,14 +8,6 @@
     };
   };
 
-  # Home-Manager configuration for all systems
-  home-manager = {
-    useGlobalPkgs = true;
-    useUserPackages = true;
-    backupFileExtension = "backup";
-    users.${custom.username} = import ./home.nix { inherit pkgs custom; };
-  };
-
   # Nixpkgs configuration for all systems.
   nixpkgs.config = {
     allowUnfree = true;
