@@ -69,13 +69,6 @@
           };
         };
 
-        # Home Manager Configuration
-        homeManagerConfig = { config, pkgs, lib, system, ... }: {
-          home-manager = {
-            extraSpecialArgs = { inherit custom; };
-          };
-        };
-
         # System Builders
         mkDarwinSystem = hostname: nix-darwin.lib.darwinSystem {
           system = "aarch64-darwin";
@@ -88,7 +81,6 @@
             mac-app-util.darwinModules.default
             home-manager.darwinModules.home-manager
             nix-homebrew.darwinModules.nix-homebrew
-            homeManagerConfig
           ];
         };
 
@@ -98,7 +90,6 @@
           modules = [
             ./nixos/configuration.nix
             home-manager.nixosModules.home-manager
-            homeManagerConfig
           ];
         };
       in {
