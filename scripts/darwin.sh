@@ -2,11 +2,10 @@
 # Run `curl -fsSL https://darwin.aloshy.ai | bash` to run this script to automatically setup Mac (M Series)
 
 set -e
+nixconfig() { echo "${HOME}/.config/nix-darwin"; }
 REPO_HOST=${GITHUB_SERVER_URL:-https://github.com}
 REPO_PATH=${GITHUB_REPOSITORY:-aloshy-ai/nix}
-CURRENT_HOSTNAME=$(hostname)
-CURRENT_USERNAME=$(whoami)
-CURRENT_HOME=$HOME
+LEGACY_USERNAME=$USER
 VOLUME_NAME="Nix Store"
 SHELL=$(echo /bin/${SHELL:-zsh})
 IS_CI=$([ "${CI}" = "true" ] && echo true || echo false)
@@ -19,34 +18,39 @@ DETECTED="$(uname -s)-$(uname -m)"
 [ "$(echo "${DETECTED}" | tr '[:upper:]' '[:lower:]')" = "darwin-arm64" ] || { echo "ERROR: SYSTEM MUST BE AN APPLE SILICON MAC (M1/M2/M3). DETECTED: ${DETECTED}" && exit 1; }
 
 echo "DOWNLOADING SYSTEM CONFIGURATION FROM ${REPO_HOST}/${REPO_PATH}"
-DARWIN_CONFIG_DIR=${HOME}/.config/nix-darwin
-sudo rm -rf "${DARWIN_CONFIG_DIR}"
-git clone -q ${REPO_HOST}/${REPO_PATH} $DARWIN_CONFIG_DIR
+sudo rm -rf "$(nixconfig)"
+git clone -q ${REPO_HOST}/${REPO_PATH} $(nixconfig)
 
 echo "CHECKING SYSTEM IDENTIFIERS"
-FLAKE_HOSTNAME=$(grep -A 1 'hostnames = {' ${DARWIN_CONFIG_DIR}/flake.nix | grep 'darwin' | sed 's/.*darwin = "\([^"]*\)".*/\1/')
-FLAKE_USERNAME=$(grep 'username = "' ${DARWIN_CONFIG_DIR}/flake.nix | sed 's/.*username = "\([^"]*\)".*/\1/')
+FLAKE_HOSTNAME=$(grep -A 1 'hostnames = {' $(nixconfig)/flake.nix | grep 'darwin' | sed 's/.*darwin = "\([^"]*\)".*/\1/')
+FLAKE_USERNAME=$(grep 'username = "' $(nixconfig)/flake.nix | sed 's/.*username = "\([^"]*\)".*/\1/')
 [ -z "$FLAKE_HOSTNAME" ] && echo "ERROR: INVALID CONFIGURATION FILE. HOSTNAME NOT FOUND IN FLAKE.NIX" && exit 1
 [ -z "$FLAKE_USERNAME" ] && echo "ERROR: INVALID CONFIGURATION FILE. USERNAME NOT FOUND IN FLAKE.NIX" && exit 1
 
 echo "ASSERTING HOSTNAME TO: ${FLAKE_HOSTNAME}"
-if [ "${CURRENT_HOSTNAME}" != "${FLAKE_HOSTNAME}" ]; then
-    echo "Setting system hostnames to ${FLAKE_HOSTNAME}"
+if [ "$(hostname)" != "${FLAKE_HOSTNAME}" ]; then
+    echo "CHANGING HOSTNAMES FROM $(hostname) to ${FLAKE_HOSTNAME}"
     sudo scutil --set ComputerName "${FLAKE_HOSTNAME}"
     sudo scutil --set LocalHostName "${FLAKE_HOSTNAME}"
     sudo scutil --set HostName "${FLAKE_HOSTNAME}"
-    CURRENT_HOSTNAME="${FLAKE_HOSTNAME}"
     echo "HOSTNAMES SET SUCCESSFULLY: $(hostname)"
 fi
 
 echo "ASSERTING USERNAME TO: ${FLAKE_USERNAME}"
-if [ "${CURRENT_USERNAME}" != "${FLAKE_USERNAME}" ]; then
-    echo "Setting up sudo privileges for ${FLAKE_USERNAME}"
+if [ "$(whoami)" != "${FLAKE_USERNAME}" ]; then
+    echo "SETTING UP SUDO PRIVILEGES FOR: ${FLAKE_USERNAME}"
     echo "${FLAKE_USERNAME} ALL=(ALL) NOPASSWD:ALL" | sudo tee /etc/sudoers.d/${FLAKE_USERNAME}
-    echo "Renaming user ${CURRENT_USERNAME} to ${FLAKE_USERNAME}"
-    sudo dscl . -change /Users/${CURRENT_USERNAME} RecordName ${CURRENT_USERNAME} ${FLAKE_USERNAME}
-    CURRENT_USERNAME="${FLAKE_USERNAME}"
-    echo "USERNAME CHANGED SUCCESSFULLY: $(whoami)"
+    echo "RENAMING $(whoami) TO ${FLAKE_USERNAME}"
+    sudo dscl . -change /Users/$(whoami) RecordName $(whoami) ${FLAKE_USERNAME}
+    echo "RENAMING HOME FOLDER FROM /Users/${LEGACY_USERNAME} TO /Users/$(whoami)"
+    [ -d "/Users/${LEGACY_USERNAME}" ] && sudo mv /Users/${LEGACY_USERNAME} /Users/$(whoami)
+    echo "CHANGING HOME FOLDER FROM /Users/${LEGACY_USERNAME} TO /Users/$(whoami)"
+    sudo dscl . -change /Users/$(whoami) NFSHomeDirectory /Users/${LEGACY_USERNAME} /Users/$(whoami)
+    echo "GIVING PERMISSION ON /Users/$(whoami) FOR /Users/$(whoami)"
+    sudo chown -R $(whoami):staff /Users/$(whoami)
+    echo "RE-EXPORTING USER & HOME VARIABLE AS $(whoami) & /Users/$(whoami) RESPECTIVELY"
+    export USER=$(whoami)
+    export HOME="/Users/$(whoami)"
 fi
 
 echo "CLEANING UP PREVIOUS INSTALLATION"
@@ -65,7 +69,7 @@ echo "BACKING UP SHELL PROFILES"
 [ ! -f /etc/zshrc.before-nix-darwin ] && sudo mv /etc/zshrc /etc/zshrc.before-nix-darwin
 
 echo "BUILDING AND ACTIVATING SYSTEM CONFIGURATION"
-cd ${DARWIN_CONFIG_DIR}
+cd $(nixconfig) 
 nix ${GITHUB_TOKEN:+--option access-tokens "github.com=${GITHUB_TOKEN}"} run nix-darwin/master#darwin-rebuild -- switch --flake .#$(hostname) --impure
 
 echo "SYSTEM SETUP COMPLETED SUCCESSFULLY"
