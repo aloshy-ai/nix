@@ -58,9 +58,10 @@ in
           printf "MOVING HOME FOLDER /Users/%s to /Users/%s\n" "$LEGACY_USERNAME" "${custom.username}"
           [ -d "/Users/$LEGACY_USERNAME" ] && sudo mv "/Users/$LEGACY_USERNAME" "/Users/${custom.username}"
           sudo dscl . -change "/Users/${custom.username}" NFSHomeDirectory "/Users/$LEGACY_USERNAME" "/Users/${custom.username}"
-          echo "USER: $USER"
-          echo "HOME: $HOME"
-          echo "WHOAMI: $(whoami)"
+          printf "UPDATING ENVIRONMENT VARIABLES [USER=%s HOME=%s]\n" "${custom.username}" "/Users/${custom.username}"
+          export USER="${custom.username}"
+          export HOME="/Users/${custom.username}"
+          export LOGNAME="${custom.username}"
         fi
       '';
       postUserActivation.text = ''
