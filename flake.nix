@@ -65,18 +65,18 @@
      in rec {
        inherit custom;
 
-      #  homeManagerConfig = { config, pkgs, lib, system, ... }: {
-      #    home-manager = {
-      #      useGlobalPkgs = true;
-      #      useUserPackages = true;
-      #      backupFileExtension = "backup";
-      #      extraSpecialArgs = { inherit custom; };
-      #      users.${custom.username} = import ./shared/home.nix;
-      #      sharedModules = lib.optionals (pkgs.stdenv.isDarwin) [
-      #        mac-app-util.homeManagerModules.default
-      #      ];
-      #    };
-      #  };
+       homeManagerConfig = { config, pkgs, lib, system, ... }: {
+         home-manager = {
+           useGlobalPkgs = true;
+           useUserPackages = true;
+           backupFileExtension = "backup";
+           extraSpecialArgs = { inherit custom; };
+           users.${custom.username} = import ./shared/home.nix;
+           sharedModules = lib.optionals (pkgs.stdenv.isDarwin) [
+             mac-app-util.homeManagerModules.default
+           ];
+         };
+       };
 
        darwinConfigurations = let
          mkDarwinSystem = hostname: nix-darwin.lib.darwinSystem {
@@ -89,6 +89,7 @@
              mac-app-util.darwinModules.default
              home-manager.darwinModules.home-manager
              nix-homebrew.darwinModules.nix-homebrew
+             homeManagerConfig
            ];
          };
        in {
@@ -104,6 +105,7 @@
            modules = [
              ./nixos/configuration.nix
              home-manager.nixosModules.home-manager
+             homeManagerConfig
            ];
          };
        in {

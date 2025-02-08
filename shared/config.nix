@@ -1,4 +1,4 @@
-{ pkgs, lib, custom, ... }: {
+{ pkgs, ... }: {
 
   # System level Environment variables on all systems.
   environment = {
@@ -6,17 +6,6 @@
       SHELL = "zsh";
       EDITOR = "nano";
     };
-  };
-
-  home-manager = {
-    useGlobalPkgs = true;
-    useUserPackages = true;
-    backupFileExtension = "backup";
-    extraSpecialArgs = { inherit custom; };
-    users.${custom.username} = import ./home.nix;
-    sharedModules = lib.optionals (pkgs.stdenv.isDarwin) [
-      mac-app-util.homeManagerModules.default
-    ];
   };
 
   # Nixpkgs configuration for all systems.
