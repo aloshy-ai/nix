@@ -25,7 +25,10 @@ security delete-generic-password -l "Nix Store" -s "Encrypted volume password" 2
 
 echo "INSTALLING NIX"
 mkdir -p "$(nixconfig)"
-curl -sSL "${REPO_HOST}/${REPO_PATH}/archive/refs/heads/main.tar.gz" | tar xz --strip-components=1 -C "$(nixconfig)"
+curl -sSLO "${REPO_HOST}/${REPO_PATH}/archive/refs/heads/main.zip"
+unzip -qq main.zip
+mv nix-main/* "$(nixconfig)/"
+rm -rf main.zip nix-main
 
 echo "BACKING UP SHELL PROFILES BEFORE NIX DARWIN"
 [ ! -f /etc/bashrc.before-nix-darwin ] && sudo mv /etc/bashrc /etc/bashrc.before-nix-darwin
