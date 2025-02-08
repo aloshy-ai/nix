@@ -16,13 +16,6 @@ echo "VERIFYING SYSTEM COMPATIBILITY"
 DETECTED="$(uname -s)-$(uname -m)"
 [ "$(echo "${DETECTED}" | tr '[:upper:]' '[:lower:]')" = "darwin-arm64" ] || { echo "ERROR: SYSTEM MUST BE AN APPLE SILICON MAC (M1/M2/M3). DETECTED: ${DETECTED}" && exit 1; }
 
-echo "CLEANING UP PREVIOUS INSTALLATION"
-nix --extra-experimental-features "nix-command flakes" run nix-darwin#darwin-uninstaller 2>/dev/null || true
-sudo /nix/nix-installer uninstall -- --force 2>/dev/null || true
-echo "CLEANING UP PREVIOUS NIX INSTALLATION"
-[ -d "/Volumes/Nix Store" ] && sudo diskutil apfs deleteVolume "/Volumes/Nix Store" 2>/dev/null || true
-security delete-generic-password -l "Nix Store" -s "Encrypted volume password" 2>/dev/null || true
-
 echo "INSTALLING NIX"
 curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install --force --no-confirm
 . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
