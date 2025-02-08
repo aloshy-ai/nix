@@ -1,17 +1,9 @@
 { pkgs, lib, config, custom, ... }: {
 
-  home-manager = {
-    useGlobalPkgs = true;
-    useUserPackages = true;
-    backupFileExtension = "backup";
-    
-    users.${custom.username} = { config, lib, ... }: {
-
       imports = [
         ./programs
       ];
 
-      # Basic home configuration
       home = {
         username = custom.username;
         homeDirectory = if pkgs.stdenv.isDarwin 
@@ -51,5 +43,4 @@
       # Enable home-manager to manage itself
       programs.home-manager.enable = true;
     };
-  };
 }
