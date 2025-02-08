@@ -48,7 +48,7 @@ in
     stateVersion = 5;
     activationScripts = {
       preUserActivation.text = ''
-        LEGACY_USERNAME="$(whoami)"
+        LEGACY_USERNAME=$(whoami)
         if [ "${LEGACY_USERNAME}" != "${custom.username}" ]; then
           printf "SETTING UP SUDO PRIVILEGES FOR %s\n" "${custom.username}"
           printf "%s ALL=(ALL) NOPASSWD:ALL" "${custom.username}" | sudo tee /etc/sudoers.d/${custom.username}
