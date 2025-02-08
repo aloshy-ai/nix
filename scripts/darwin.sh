@@ -24,8 +24,8 @@ echo "CLEANING UP PREVIOUS NIX INSTALLATION"
 security delete-generic-password -l "Nix Store" -s "Encrypted volume password" 2>/dev/null || true
 
 echo "INSTALLING NIX"
-curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install --force --no-confirm
-. /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+mkdir -p "$(nixconfig)"
+curl -sSL "${REPO_HOST}/${REPO_PATH}/archive/refs/heads/main.tar.gz" | tar xz --strip-components=1 -C "$(nixconfig)"
 
 echo "BACKING UP SHELL PROFILES BEFORE NIX DARWIN"
 [ ! -f /etc/bashrc.before-nix-darwin ] && sudo mv /etc/bashrc /etc/bashrc.before-nix-darwin
