@@ -38,7 +38,13 @@ git clone -q ${REPO_HOST}/${REPO_PATH} $(nixconfig)
 echo "BUILDING AND ACTIVATING SYSTEM CONFIGURATION"
 cd $(nixconfig)
 FLAKE_HOSTNAME=$(grep -A 1 'hostnames = {' $(nixconfig)/flake.nix | grep 'darwin' | sed 's/.*darwin = "\([^"]*\)".*/\1/')
-nix ${GITHUB_TOKEN:+--option access-tokens "github.com=${GITHUB_TOKEN}"} run nix-darwin/master#darwin-rebuild -- switch --flake .#${FLAKE_HOSTNAME} --impure
+
+# Add these environment variables for Nix
+[ -n "${GITHUB_TOKEN}" ] && {
+    export NIX_CONFIG="access-tokens = github.com=${GITHUB_TOKEN}"
+}
+
+nix run nix-darwin/master#darwin-rebuild -- switch --flake .#${FLAKE_HOSTNAME} --impure
 echo "SYSTEM SETUP COMPLETED SUCCESSFULLY"
 
 [ "$IS_CI" = true ] && {
