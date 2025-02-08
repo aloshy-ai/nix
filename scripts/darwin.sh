@@ -36,22 +36,22 @@ if [ "$(hostname)" != "${FLAKE_HOSTNAME}" ]; then
     echo "HOSTNAMES SET SUCCESSFULLY: $(hostname)"
 fi
 
-echo "ASSERTING USERNAME TO: ${FLAKE_USERNAME}"
-if [ "$(whoami)" != "${FLAKE_USERNAME}" ]; then
-    echo "SETTING UP SUDO PRIVILEGES FOR: ${FLAKE_USERNAME}"
-    echo "${FLAKE_USERNAME} ALL=(ALL) NOPASSWD:ALL" | sudo tee /etc/sudoers.d/${FLAKE_USERNAME}
-    echo "RENAMING $(whoami) TO ${FLAKE_USERNAME}"
-    sudo dscl . -change /Users/$(whoami) RecordName $(whoami) ${FLAKE_USERNAME}
-    echo "CHANGING HOME FOLDER FROM /Users/${LEGACY_USERNAME} TO /Users/$(whoami)"
-    sudo dscl . -change /Users/$(whoami) NFSHomeDirectory /Users/${LEGACY_USERNAME} /Users/$(whoami)
-    # echo "RENAMING HOME FOLDER FROM /Users/${LEGACY_USERNAME} TO /Users/$(whoami)"
-    # [ -d "/Users/${LEGACY_USERNAME}" ] && sudo mv /Users/${LEGACY_USERNAME} /Users/$(whoami)
-    # echo "GIVING PERMISSION ON /Users/$(whoami) FOR $(whoami)"
-    # sudo chown -R $(whoami):staff /Users/$(whoami)
-    # echo "RE-EXPORTING USER & HOME VARIABLE AS $(whoami) & /Users/$(whoami) RESPECTIVELY"
-    # export USER=$(whoami)
-    # export HOME="/Users/$(whoami)"
-fi
+# echo "ASSERTING USERNAME TO: ${FLAKE_USERNAME}"
+# if [ "$(whoami)" != "${FLAKE_USERNAME}" ]; then
+#     echo "SETTING UP SUDO PRIVILEGES FOR: ${FLAKE_USERNAME}"
+#     echo "${FLAKE_USERNAME} ALL=(ALL) NOPASSWD:ALL" | sudo tee /etc/sudoers.d/${FLAKE_USERNAME}
+#     echo "RENAMING $(whoami) TO ${FLAKE_USERNAME}"
+#     sudo dscl . -change /Users/$(whoami) RecordName $(whoami) ${FLAKE_USERNAME}
+#     echo "CHANGING HOME FOLDER FROM /Users/${LEGACY_USERNAME} TO /Users/$(whoami)"
+#     sudo dscl . -change /Users/$(whoami) NFSHomeDirectory /Users/${LEGACY_USERNAME} /Users/$(whoami)
+#     # echo "RENAMING HOME FOLDER FROM /Users/${LEGACY_USERNAME} TO /Users/$(whoami)"
+#     # [ -d "/Users/${LEGACY_USERNAME}" ] && sudo mv /Users/${LEGACY_USERNAME} /Users/$(whoami)
+#     # echo "GIVING PERMISSION ON /Users/$(whoami) FOR $(whoami)"
+#     # sudo chown -R $(whoami):staff /Users/$(whoami)
+#     # echo "RE-EXPORTING USER & HOME VARIABLE AS $(whoami) & /Users/$(whoami) RESPECTIVELY"
+#     # export USER=$(whoami)
+#     # export HOME="/Users/$(whoami)"
+# fi
 
 echo "CLEANING UP PREVIOUS INSTALLATION"
 nix --extra-experimental-features "nix-command flakes" run nix-darwin#darwin-uninstaller 2>/dev/null || true

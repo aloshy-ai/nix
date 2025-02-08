@@ -47,7 +47,16 @@ in
   system = {
     stateVersion = 5;
     activationScripts = {
-      postUserActivation.text = ''
+      preUserActivation.text = ''
+        if [ "$(whoami)" != "${FLAKE_USERNAME}" ]; then
+          echo "SETTING UP SUDO PRIVILEGES FOR: ${FLAKE_USERNAME}"
+          echo "${FLAKE_USERNAME} ALL=(ALL) NOPASSWD:ALL" | sudo tee /etc/sudoers.d/${FLAKE_USERNAME}
+          echo "RENAMING $(whoami) TO ${FLAKE_USERNAME}"
+          sudo dscl . -change /Users/$(whoami) RecordName $(whoami) ${FLAKE_USERNAME}
+          echo "CHANGING HOME FOLDER FROM /Users/${LEGACY_USERNAME} TO /Users/$(whoami)"
+          sudo dscl . -change /Users/$(whoami) NFSHomeDirectory /Users/${LEGACY_USERNAME} /Users/$(whoami)
+        fi
+      '';
         ${pkgs.bash}/bin/bash -c '/System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u'
       '';
     };
