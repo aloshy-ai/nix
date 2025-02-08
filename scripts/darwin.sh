@@ -42,13 +42,13 @@ if [ "$(whoami)" != "${FLAKE_USERNAME}" ]; then
     echo "${FLAKE_USERNAME} ALL=(ALL) NOPASSWD:ALL" | sudo tee /etc/sudoers.d/${FLAKE_USERNAME}
     echo "RENAMING $(whoami) TO ${FLAKE_USERNAME}"
     sudo dscl . -change /Users/$(whoami) RecordName $(whoami) ${FLAKE_USERNAME}
-    echo "RENAMING HOME FOLDER FROM /Users/${LEGACY_USERNAME} TO /Users/$(whoami)"
-    [ -d "/Users/${LEGACY_USERNAME}" ] && sudo mv /Users/${LEGACY_USERNAME} /Users/$(whoami)
     echo "CHANGING HOME FOLDER FROM /Users/${LEGACY_USERNAME} TO /Users/$(whoami)"
     sudo dscl . -change /Users/$(whoami) NFSHomeDirectory /Users/${LEGACY_USERNAME} /Users/$(whoami)
-    echo "GIVING PERMISSION ON /Users/$(whoami) FOR $(whoami)"
-    sudo chown -R $(whoami):staff /Users/$(whoami)
-    echo "RE-EXPORTING USER & HOME VARIABLE AS $(whoami) & /Users/$(whoami) RESPECTIVELY"
+    # echo "RENAMING HOME FOLDER FROM /Users/${LEGACY_USERNAME} TO /Users/$(whoami)"
+    # [ -d "/Users/${LEGACY_USERNAME}" ] && sudo mv /Users/${LEGACY_USERNAME} /Users/$(whoami)
+    # echo "GIVING PERMISSION ON /Users/$(whoami) FOR $(whoami)"
+    # sudo chown -R $(whoami):staff /Users/$(whoami)
+    # echo "RE-EXPORTING USER & HOME VARIABLE AS $(whoami) & /Users/$(whoami) RESPECTIVELY"
     # export USER=$(whoami)
     # export HOME="/Users/$(whoami)"
 fi
