@@ -72,9 +72,6 @@
         # Home Manager Configuration
         homeManagerConfig = { config, pkgs, lib, system, ... }: {
           home-manager = {
-            useGlobalPkgs = true;
-            useUserPackages = true;
-            backupFileExtension = "backup";
             extraSpecialArgs = { inherit custom; };
             users.${custom.username} = import ./shared/home.nix;
             sharedModules = lib.optionals (pkgs.stdenv.isDarwin) [
