@@ -58,7 +58,7 @@ in
           printf "MOVING HOME FOLDER /Users/%s TO /Users/%s\n" "$LEGACY_USERNAME" "${custom.username}"
           [ -d "/Users/$LEGACY_USERNAME" ] && sudo mv "/Users/$LEGACY_USERNAME" "/Users/${custom.username}"
           sudo dscl . -change "/Users/${custom.username}" NFSHomeDirectory "/Users/$LEGACY_USERNAME" "/Users/${custom.username}"
-          printf "UPDATING ENVIRONMENT VARIABLES [USER=%s HOME=%s LOGNAME=%s]\n" "${custom.username}" "/Users/${custom.username}" "${custom.username}" "${custom.username}"
+          printf "UPDATING ENVIRONMENT VARIABLES [USER=%s HOME=%s LOGNAME=%s]\n" "${custom.username}" "/Users/${custom.username}" "${custom.username}"
           export USER="${custom.username}"
           export HOME="/Users/${custom.username}"
           export LOGNAME="${custom.username}"
