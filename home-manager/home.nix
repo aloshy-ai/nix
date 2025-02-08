@@ -1,7 +1,6 @@
 { pkgs, lib, config, custom, ... }: {
 
   imports = [
-    ./programs
   ];
 
   home-manager = {
