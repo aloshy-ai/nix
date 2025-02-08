@@ -1,4 +1,4 @@
-{ pkgs, custom, ... }: {
+{ pkgs, lib, config, custom, ... }: {
 
   imports = [
     ./programs
