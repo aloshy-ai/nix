@@ -3,22 +3,6 @@ let
   isCI = ci-detector.lib.inCI;
 in
 {
-  nix-homebrew = {
-    enable = true;
-    enableRosetta = true;
-    user = custom.username;
-    
-    # Optional: Declarative tap management
-    mutableTaps = true; # Set to false if you want fully declarative tap management
-    
-    # Your taps will be automatically managed since you've set them up in flake inputs
-    taps = {
-      "homebrew/homebrew-core" = homebrew-core;
-      "homebrew/homebrew-cask" = homebrew-cask;
-      "homebrew/homebrew-bundle" = homebrew-bundle;
-    };
-  };
-
   # Regular Homebrew configuration
   homebrew = {
     enable = true;
@@ -47,6 +31,13 @@ in
       # Example: 
       # copyclip = 595191960;
     };
+  };
+
+  nix-homebrew = {
+    enable = true;
+    enableRosetta = true;
+    user = custom.username;
+    autoMigrate = true;
   };
 
   # Optional: Configure Homebrew mirrors if needed
