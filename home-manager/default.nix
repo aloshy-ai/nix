@@ -7,7 +7,7 @@
     users.${custom.username} = { config, pkgs, lib, custom, ... }: {
 
   imports = [
-    ./programs { inherit custom; };
+    ./programs { inherit custom; }
   ];
 
   home = {
