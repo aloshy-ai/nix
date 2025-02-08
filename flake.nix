@@ -74,9 +74,6 @@
           home-manager = {
             extraSpecialArgs = { inherit custom; };
             users.${custom.username} = import ./shared/home.nix;
-            sharedModules = lib.optionals (pkgs.stdenv.isDarwin) [
-              mac-app-util.homeManagerModules.default
-            ];
           };
         };
 
