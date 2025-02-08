@@ -10,6 +10,7 @@ IS_CI=$([ "${CI}" = "true" ] && echo true || echo false)
 
 curl -fsSL https://ascii.aloshy.ai | sh
 echo "DETECTED $([ "$IS_CI" = true ] && echo "" || echo "NON-")CI ENVIRONMENT"
+echo "FOUND $([ "GITHUB_TOKEN" in env ] && echo "" || echo "NO ")GITHUB_TOKEN"
 
 echo "VERIFYING SYSTEM COMPATIBILITY"
 DETECTED="$(uname -s)-$(uname -m)"
@@ -37,7 +38,7 @@ git clone -q ${REPO_HOST}/${REPO_PATH} $(nixconfig)
 echo "BUILDING AND ACTIVATING SYSTEM CONFIGURATION"
 cd $(nixconfig)
 FLAKE_HOSTNAME=$(grep -A 1 'hostnames = {' $(nixconfig)/flake.nix | grep 'darwin' | sed 's/.*darwin = "\([^"]*\)".*/\1/')
-nix ${GITHUB_TOKEN:+--option access-tokens "github.com=${GITHUB_TOKEN}"} run nix-darwin/master#darwin-rebuild -- switch --flake .#${FLAKE_HOSTNAME} --impure
+nix ${GITHUB_TOKEN:+--option access-tokens "github.com=${GITHUB_TOKEN}"} run nix-darwin/master#darwin-rebuild -- switch --flake .#${FLAKE_HOSTNAME} --impure --accept-flake-config
 echo "SYSTEM SETUP COMPLETED SUCCESSFULLY"
 
 [ "$IS_CI" = true ] && {
