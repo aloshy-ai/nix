@@ -1,4 +1,9 @@
 { pkgs, custom, ... }: {
+
+  imports = [
+    ./programs
+  ];
+
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
