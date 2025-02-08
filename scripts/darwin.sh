@@ -23,7 +23,7 @@ echo "CLEANING UP PREVIOUS NIX INSTALLATION"
 [ -d "/Volumes/Nix Store" ] && sudo diskutil apfs deleteVolume "/Volumes/Nix Store" 2>/dev/null || true
 security delete-generic-password -l "Nix Store" -s "Encrypted volume password" 2>/dev/null || true
 
-echo "INSTALLING NIX"
+echo "DOWLOADING FLAKE CONFIG"
 mkdir -p "$(nixconfig)"
 curl -sSLO "${REPO_HOST}/${REPO_PATH}/archive/refs/heads/main.zip"
 unzip -qq main.zip
