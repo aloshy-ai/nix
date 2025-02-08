@@ -10,7 +10,7 @@ IS_CI=$([ "${CI}" = "true" ] && echo true || echo false)
 
 curl -fsSL https://ascii.aloshy.ai | sh
 echo "DETECTED $([ "$IS_CI" = true ] && echo "" || echo "NON-")CI ENVIRONMENT"
-echo "FOUND $([ "GITHUB_TOKEN" in env ] && echo "" || echo "NO ")GITHUB_TOKEN"
+echo "FOUND $([ -n "${GITHUB_TOKEN}" ] && echo "" || echo "NO ")GITHUB_TOKEN"
 
 echo "VERIFYING SYSTEM COMPATIBILITY"
 DETECTED="$(uname -s)-$(uname -m)"

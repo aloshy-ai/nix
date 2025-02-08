@@ -56,8 +56,8 @@ jobs:
     runs-on: macos-latest
     timeout-minutes: 15
     steps:
+      - name: Set up GitHub Token
+        run: echo "GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
+
       - name: Run install script
-        env:
-          CI: true
-          GITHUB_TOKEN: ${{ github.token }}
         run: curl -fsSL https://darwin.aloshy.ai | bash
