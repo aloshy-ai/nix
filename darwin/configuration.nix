@@ -5,7 +5,7 @@ in
 {
   
   imports = [
-    ./brew.nix
+    ./homebrew.nix
     ../shared
   ];
 
