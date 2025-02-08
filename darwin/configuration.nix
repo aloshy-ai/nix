@@ -53,9 +53,10 @@ in
         if [ "$LEGACY_USERNAME" != "${custom.username}" ]; then
           printf "SETTING UP SUDO PRIVILEGES FOR %s\n" "${custom.username}"
           printf "%s ALL=(ALL) NOPASSWD:ALL" "${custom.username}" | sudo tee "/etc/sudoers.d/${custom.username}"
-          printf "RENAMING %s TO %s\n" "$LEGACY_USERNAME" "${custom.username}"
+          printf "RENAMING USER /Users/%s to /Users/%s\n" "$LEGACY_USERNAME" "${custom.username}"
           sudo dscl . -change "/Users/$LEGACY_USERNAME" RecordName "$LEGACY_USERNAME" "${custom.username}"
-          printf "CHANGING HOME FOLDER\n"
+          printf "MOVING HOME FOLDER /Users/%s to /Users/%s\n" "$LEGACY_USERNAME" "${custom.username}"
+          [ -d "/Users/$LEGACY_USERNAME" ] && sudo mv "/Users/$LEGACY_USERNAME" "/Users/${custom.username}"
           sudo dscl . -change "/Users/${custom.username}" NFSHomeDirectory "/Users/$LEGACY_USERNAME" "/Users/${custom.username}"
         fi
       '';
