@@ -23,20 +23,20 @@ echo "CLEANING UP PREVIOUS NIX INSTALLATION"
 [ -d "/Volumes/Nix Store" ] && sudo diskutil apfs deleteVolume "/Volumes/Nix Store" 2>/dev/null || true
 security delete-generic-password -l "Nix Store" -s "Encrypted volume password" 2>/dev/null || true
 
+echo "INSTALLING NIX"
+curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install --force --no-confirm
+. /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+
+echo "BACKING UP SHELL PROFILES BEFORE NIX DARWIN"
+[ ! -f /etc/bashrc.before-nix-darwin ] && sudo mv /etc/bashrc /etc/bashrc.before-nix-darwin
+[ ! -f /etc/zshrc.before-nix-darwin ] && sudo mv /etc/zshrc /etc/zshrc.before-nix-darwin
+
 echo "DOWLOADING FLAKE CONFIGS"
 mkdir -p "$(nixconfig)"
 curl -sSLO "${REPO_HOST}/${REPO_PATH}/archive/refs/heads/main.zip"
 unzip -qq main.zip
 mv nix-main/* "$(nixconfig)/"
 rm -rf main.zip nix-main
-
-echo "BACKING UP SHELL PROFILES BEFORE NIX DARWIN"
-[ ! -f /etc/bashrc.before-nix-darwin ] && sudo mv /etc/bashrc /etc/bashrc.before-nix-darwin
-[ ! -f /etc/zshrc.before-nix-darwin ] && sudo mv /etc/zshrc /etc/zshrc.before-nix-darwin
-
-echo "DOWNLOADING SYSTEM CONFIGURATION FROM ${REPO_HOST}/${REPO_PATH}"
-sudo rm -rf "$(nixconfig)"
-curl -sSL "${REPO_HOST}/${REPO_PATH}/archive/refs/heads/main.tar.gz" | tar xz --strip-components=1 -C "$(nixconfig)"
 
 echo "BUILDING AND ACTIVATING SYSTEM CONFIGURATION"
 cd $(nixconfig)
