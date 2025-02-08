@@ -1,6 +1,23 @@
 {
- inputs = {
+  inputs = {
+    # Core
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    flake-parts = {
+      url = "github:hercules-ci/flake-parts";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    # Darwin/macOS
+    nix-darwin = {
+      url = "github:lnl7/nix-darwin";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    mac-app-util = {
+      url = "github:hraban/mac-app-util";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    # Homebrew Integration
     nix-homebrew = {
       url = "github:zhaofengli-wip/nix-homebrew";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -17,111 +34,99 @@
       url = "github:homebrew/homebrew-bundle";
       flake = false;
     };
-    flake-parts = {
-      url = "github:hercules-ci/flake-parts";
+
+    # User Environment
+    home-manager = {
+      url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    mac-app-util = {
-      url = "github:hraban/mac-app-util";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+
+    # Utils
     ci-detector = {
       url = "github:loophp/ci-detector";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nix-darwin = {
-      url = "github:lnl7/nix-darwin";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    home-manager = {
-      url = "github:nix-community/home-manager";
-      inputs.nixpkgs.follows = "nixpkgs";
-   };
- };
-
-  nixConfig = {
-    allow-impure-eval = true;
   };
 
- outputs = inputs@{ flake-parts, nixpkgs, home-manager, nix-darwin, mac-app-util, ci-detector, nix-homebrew, homebrew-core, homebrew-cask, homebrew-bundle, ... }:
-   flake-parts.lib.mkFlake { inherit inputs; } {
-     systems = [
-       "x86_64-linux"
-       "aarch64-darwin"
-     ];
+  nixConfig.allow-impure-eval = true;
 
-     flake = let
-       custom = {
-         username = "aloshy";
-         email = "noreply@aloshy.ai";
-         fullName = "aloshy.🅰🅸";
-         publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINzsLYdG0gkky7NCydRoqc0EMYEb61V+xsFKYJpH+ivV aloshy@ETHERFORGE.local";
-         hashedPassword = "$6$OF89tQYOvaEHKCfx$KYSdQu/GHroUMovkUKUqbvUpEM51MurUpLob6E9YiEMWxvABDsrfACQxej02f9xuV5.HnNtMmpEoLDeAqCZfB1";
-         hostnames = {
-           darwin = "ethermac";
-           nixos = "ethernix";
-         };
-       };
-     in rec {
-       inherit custom;
+  outputs = inputs@{ flake-parts, nixpkgs, home-manager, nix-darwin, mac-app-util, 
+    ci-detector, nix-homebrew, homebrew-core, homebrew-cask, homebrew-bundle, ... }:
+    flake-parts.lib.mkFlake { inherit inputs; } {
+      systems = ["x86_64-linux" "aarch64-darwin"];
 
-       homeManagerConfig = { config, pkgs, lib, system, ... }: {
-         home-manager = {
-           useGlobalPkgs = true;
-           useUserPackages = true;
-           backupFileExtension = "backup";
-           extraSpecialArgs = { inherit custom; };
-           users.${custom.username} = import ./shared/home.nix;
-           sharedModules = lib.optionals (pkgs.stdenv.isDarwin) [
-             mac-app-util.homeManagerModules.default
-           ];
-         };
-       };
+      flake = let
+        # User Configuration
+        custom = {
+          username = "aloshy";
+          email = "noreply@aloshy.ai";
+          fullName = "aloshy.🅰🅸";
+          publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINzsLYdG0gkky7NCydRoqc0EMYEb61V+xsFKYJpH+ivV aloshy@ETHERFORGE.local";
+          hashedPassword = "$6$OF89tQYOvaEHKCfx$KYSdQu/GHroUMovkUKUqbvUpEM51MurUpLob6E9YiEMWxvABDsrfACQxej02f9xuV5.HnNtMmpEoLDeAqCZfB1";
+          hostnames = {
+            darwin = "ethermac";
+            nixos = "ethernix";
+          };
+        };
 
-       darwinConfigurations = let
-         mkDarwinSystem = hostname: nix-darwin.lib.darwinSystem {
-           system = "aarch64-darwin";
-           specialArgs = { 
-             inherit custom hostname ci-detector nix-homebrew homebrew-core homebrew-cask homebrew-bundle;
-           };
-           modules = [
-             ./darwin/configuration.nix
-             mac-app-util.darwinModules.default
-             home-manager.darwinModules.home-manager
-             nix-homebrew.darwinModules.nix-homebrew
-             homeManagerConfig
-           ];
-         };
-       in {
-         ${custom.hostnames.darwin} = mkDarwinSystem custom.hostnames.darwin;
-       };
+        # Home Manager Configuration
+        homeManagerConfig = { config, pkgs, lib, system, ... }: {
+          home-manager = {
+            useGlobalPkgs = true;
+            useUserPackages = true;
+            backupFileExtension = "backup";
+            extraSpecialArgs = { inherit custom; };
+            users.${custom.username} = import ./shared/home.nix;
+            sharedModules = lib.optionals (pkgs.stdenv.isDarwin) [
+              mac-app-util.homeManagerModules.default
+            ];
+          };
+        };
 
-       nixosConfigurations = let
-         mkNixosSystem = hostname: nixpkgs.lib.nixosSystem {
-           system = "aarch64-linux";
-           specialArgs = { 
-             inherit custom hostname;
-           };
-           modules = [
-             ./nixos/configuration.nix
-             home-manager.nixosModules.home-manager
-             homeManagerConfig
-           ];
-         };
-       in {
-         ${custom.hostnames.nixos} = mkNixosSystem custom.hostnames.nixos;
-       };
-     };
+        # System Builders
+        mkDarwinSystem = hostname: nix-darwin.lib.darwinSystem {
+          system = "aarch64-darwin";
+          specialArgs = { 
+            inherit custom hostname ci-detector nix-homebrew 
+              homebrew-core homebrew-cask homebrew-bundle;
+          };
+          modules = [
+            ./darwin/configuration.nix
+            mac-app-util.darwinModules.default
+            home-manager.darwinModules.home-manager
+            nix-homebrew.darwinModules.nix-homebrew
+            homeManagerConfig
+          ];
+        };
 
-     perSystem = { config, self', inputs', pkgs, system, ... }: {
-       devShells.default = pkgs.mkShell {
-         packages = with pkgs; [
-           nixfmt
-         ];
-         shellHook = pkgs.lib.optionalString pkgs.stdenv.isDarwin ''
-           ${pkgs.mac-app-util}/bin/mac-app-util sync-binary-store-apps
-         '';
-       };
-     };
-   };
+        mkNixosSystem = hostname: nixpkgs.lib.nixosSystem {
+          system = "aarch64-linux";
+          specialArgs = { inherit custom hostname; };
+          modules = [
+            ./nixos/configuration.nix
+            home-manager.nixosModules.home-manager
+            homeManagerConfig
+          ];
+        };
+      in {
+        inherit custom;
+        
+        # System Configurations
+        darwinConfigurations.${custom.hostnames.darwin} = 
+          mkDarwinSystem custom.hostnames.darwin;
+        
+        nixosConfigurations.${custom.hostnames.nixos} = 
+          mkNixosSystem custom.hostnames.nixos;
+      };
+
+      # Development Shell
+      perSystem = { config, self', inputs', pkgs, system, ... }: {
+        devShells.default = pkgs.mkShell {
+          packages = with pkgs; [ nixfmt ];
+          shellHook = pkgs.lib.optionalString pkgs.stdenv.isDarwin ''
+            ${pkgs.mac-app-util}/bin/mac-app-util sync-binary-store-apps
+          '';
+        };
+      };
+    };
 }
