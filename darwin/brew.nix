@@ -1,4 +1,4 @@
-{ config, lib, pkgs, custom, ci-detector, ... }:
+{ config, lib, pkgs, custom, ci-detector, homebrew-core, homebrew-cask, homebrew-bundle, ... }:
 let
   isCI = ci-detector.lib.inCI;
 in
@@ -13,9 +13,9 @@ in
     
     # Your taps will be automatically managed since you've set them up in flake inputs
     taps = {
-      "homebrew/homebrew-core" = config.homebrew-core;
-      "homebrew/homebrew-cask" = config.homebrew-cask;
-      "homebrew/homebrew-bundle" = config.homebrew-bundle;
+      "homebrew/homebrew-core" = homebrew-core;
+      "homebrew/homebrew-cask" = homebrew-cask;
+      "homebrew/homebrew-bundle" = homebrew-bundle;
     };
   };
 
