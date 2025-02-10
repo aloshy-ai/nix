@@ -1,5 +1,13 @@
 { pkgs, custom, ... }: {
 
+  home-manager = {
+    useGlobalPkgs = true;
+    useUserPackages = true;
+    users.${custom.username} = import ../home-manager/home.nix { 
+      inherit pkgs custom; 
+    };
+  };
+
   # System level Environment variables on all systems.
   environment = {
     variables = {
