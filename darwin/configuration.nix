@@ -6,7 +6,6 @@ in
   
   imports = [
     ./homebrew.nix
-    ../home-manager
     ../shared
   ];
 
