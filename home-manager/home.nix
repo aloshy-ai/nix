@@ -1,42 +1,24 @@
-{ config, pkgs, lib, custom, ... }: {
-
-  imports = [
-    ./programs
-  ];
-
+{ pkgs, custom, ... }: {
   home = {
     username = custom.username;
-    homeDirectory = if pkgs.stdenv.isDarwin 
+    homeDirectory = if pkgs.stdenv.isDarwin
       then "/Users/${custom.username}"
       else "/home/${custom.username}";
+    
     packages = with pkgs; [
-      devbox
-      nerd-fonts.fira-code
-      nerd-fonts.jetbrains-mono
-      nerd-fonts.symbols-only
+      # Add your common packages here
     ];
-    stateVersion = pkgs.lib.trivial.release;
-    shellAliases = {};
-    sessionPath = [];
+
+        stateVersion = pkgs.lib.trivial.release;
   };
 
-  # Add activation script for devbox configuration
-  home.activation = {
-    linkDevboxConfig = lib.hm.dag.entryAfter ["writeBoundary"] ''
-      DEVBOX_GLOBAL_DIR="$(${pkgs.devbox}/bin/devbox -q global path)"
-      $DRY_RUN_CMD mkdir -p "$DEVBOX_GLOBAL_DIR"
-      [ -f "$DEVBOX_GLOBAL_DIR/devbox.json" ] && $DRY_RUN_CMD rm "$DEVBOX_GLOBAL_DIR/devbox.json"
-      $DRY_RUN_CMD ln -sf $VERBOSE_ARG \
-        "${config.home.homeDirectory}/.config/nix-darwin/devbox.json" \
-        "$DEVBOX_GLOBAL_DIR/devbox.json"
-    '';
+  programs = {
+    home-manager.enable = true;
+    git = {
+      enable = true;
+      userName = custom.fullName;
+      userEmail = custom.email;
+    };
+    # Add other program configurations
   };
-
-  # Session variables  
-  home.sessionVariables = {
-    DIRENV_LOG_FORMAT = "";
-  };
-
-  # Allow unfree packages
-  nixpkgs.config.allowUnfree = true;
 }
