@@ -4,7 +4,6 @@
   # Import hardware configuration
   imports = [
     ./hardware-configuration.nix
-    ../home-manager
     ../shared
   ];
 
