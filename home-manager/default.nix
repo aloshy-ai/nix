@@ -1,13 +1,7 @@
-{ config, pkgs, custom, ... }: {
-
-  home-manager = {
-    useGlobalPkgs = true;
-    useUserPackages = true;
-    backupFileExtension = "backup";
-    users.${custom.username} = { config, pkgs, lib, custom, ... }: {
+{ config, pkgs, lib, custom, ... }: {
 
   imports = [
-    ./programs { inherit custom; }
+    ./programs
   ];
 
   home = {
@@ -45,6 +39,4 @@
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
-};
-  };
 }
