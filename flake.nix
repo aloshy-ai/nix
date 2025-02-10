@@ -53,6 +53,12 @@
   outputs = inputs@{ flake-parts, nixpkgs, home-manager, nix-darwin, mac-app-util, 
     ci-detector, nix-homebrew, homebrew-core, homebrew-cask, homebrew-bundle, ... }:
     flake-parts.lib.mkFlake { inherit inputs; } {
+      # Imported Modules
+      imports = [
+        home-manager.flakeModules.home-manager
+      ];
+
+      # Supported Systems
       systems = ["x86_64-linux" "aarch64-darwin"];
 
       flake = let
