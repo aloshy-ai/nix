@@ -2,8 +2,8 @@
 
 [![](https://img.shields.io/badge/aloshy.🅰🅸-000000.svg?style=for-the-badge)](https://aloshy.ai)
 [![Powered By Nix](https://img.shields.io/badge/NIX-POWERED-5277C3.svg?style=for-the-badge&logo=nixos)](https://nixos.org)
-[![Platform](https://img.shields.io/badge/PLATFORM-UNIVERSAL-blueviolet.svg?style=for-the-badge)](https://github.com/aloshy-ai/nix)
 [![Build Status](https://img.shields.io/badge/BUILD-PASSING-success.svg?style=for-the-badge&logo=github)](https://github.com/aloshy-ai/nix/actions)
+[![Apple Silicon Ready](https://img.shields.io/badge/Apple%20Silicon-Ready-success?logo=apple&logoColor=white)](https://github.com/aloshy-ai/nix)
 [![License](https://img.shields.io/badge/LICENSE-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
 
 Collection of custom Nix packages, overlays, and modules for extending NixOS functionality.
@@ -12,7 +12,6 @@ Collection of custom Nix packages, overlays, and modules for extending NixOS fun
 ## Getting Started
 
 [![Built with Devbox](https://www.jetify.com/img/devbox/shield_galaxy.svg)](https://www.jetify.com/devbox/docs/contributor-quickstart/)
-[![Apple Silicon Ready](https://img.shields.io/badge/Apple%20Silicon-Ready-success?logo=apple&logoColor=white)](https://github.com/aloshy-ai/nix)
 [![Docker Support](https://img.shields.io/badge/Docker-Enabled-2496ED?logo=docker&logoColor=white)](https://github.com/aloshy-ai/nix)
 
 This project uses [devbox](https://github.com/jetify-com/devbox) to manage its development environment.
